@@ -16,7 +16,7 @@ st.set_page_config(
 from data.fetcher import get_unified_candidates
 from science.habitability import score_habitability
 from science.ai_model import predict_confirmation_confidence
-from pages import dashboard, explorer, system_viewer, analytics
+from pages import dashboard, explorer, system_viewer, analytics, jwst_isro
 
 # Inject custom CSS
 css_path = os.path.join(os.path.dirname(__file__), "assets", "style.css")
@@ -85,6 +85,7 @@ def main():
             "🔎 Candidate Explorer",
             "🌌 3D System Viewer",
             "📈 Population Analytics",
+            "🔬 JWST & ISRO Planning",
         ],
         index=0,
     )
@@ -111,6 +112,8 @@ def main():
         system_viewer.show(df)
     elif nav == "📈 Population Analytics":
         analytics.show(df)
+    elif nav == "🔬 JWST & ISRO Planning":
+        jwst_isro.show(df)
 
 
 if __name__ == "__main__":
