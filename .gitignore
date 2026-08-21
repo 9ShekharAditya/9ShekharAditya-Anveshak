@@ -1,0 +1,19 @@
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Data cache (re-downloaded automatically or kept local)
+data/cache/
+
+# OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db

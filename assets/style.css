@@ -1,0 +1,43 @@
+/* Custom CSS for the Exoplanet Dashboard */
+
+/* Dark space theme */
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(180deg, #0a0a2e 0%, #1a1a3e 100%);
+}
+
+[data-testid="stSidebar"] {
+    background: #0d0d30;
+}
+
+/* Metric cards */
+[data-testid="stMetric"] {
+    background-color: rgba(20, 20, 60, 0.8);
+    border: 1px solid rgba(100, 100, 255, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+[data-testid="stMetricValue"] {
+    color: #7eb8ff;
+}
+
+/* Headers */
+h1, h2, h3 {
+    color: #c8d6e5 !important;
+}
+
+/* DataFrames */
+[data-testid="stDataFrame"] {
+    border: 1px solid rgba(100, 100, 255, 0.15);
+    border-radius: 8px;
+}
+
+/* Tabs */
+[data-testid="stTab"] {
+    color: #a0b0c0;
+}
+
+/* Plotly charts — remove white background */
+.js-plotly-plot .plotly .main-svg {
+    background: transparent !important;
+}
