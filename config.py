@@ -106,10 +106,10 @@ MASS_RADIUS_NEPTUNIAN = {"a": 0.0, "b": 1.70}    # 1.23 < R < 14.26 R_earth
 
 # ─── Display Settings ────────────────────────────────────────────────
 TIER_COLORS = {
-    "High Potential": "#2ecc71",      # green
-    "Moderate Potential": "#f1c40f",   # yellow
-    "Low Potential": "#e74c3c",        # red
-    "Not Habitable": "#95a5a6",        # gray
+    "High Potential": "#3ddc84",      # green
+    "Moderate Potential": "#d4a843",   # gold
+    "Low Potential": "#ff5252",        # red
+    "Not Habitable": "#5a5548",        # muted
 }
 
 TIER_EMOJIS = {
@@ -120,8 +120,8 @@ TIER_EMOJIS = {
 }
 
 SOURCE_COLORS = {
-    "Kepler": "#3498db",
-    "K2": "#9b59b6",
-    "TESS": "#e67e22",
-    "Confirmed": "#2ecc71",
+    "Kepler": "#5b9bf5",
+    "K2": "#b388ff",
+    "TESS": "#ffb74d",
+    "Confirmed": "#3ddc84",
 }

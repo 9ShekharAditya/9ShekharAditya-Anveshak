@@ -1,43 +1,323 @@
-/* Custom CSS for the Exoplanet Dashboard */
+/* ═══════════════════════════════════════════════════════════════════
+   EXOPLANET DASHBOARD — PREMIUM DARK + GOLD MISSION CONTROL THEME
+   ═══════════════════════════════════════════════════════════════════ */
 
-/* Dark space theme */
-[data-testid="stAppViewContainer"] {
-    background: linear-gradient(180deg, #0a0a2e 0%, #1a1a3e 100%);
+/* ── ROOT VARIABLES ───────────────────────────────────────────────── */
+:root {
+    --bg-primary: #080810;
+    --bg-secondary: #0c0c1a;
+    --bg-card: #0f1020;
+    --bg-card-hover: #141428;
+    --border-subtle: rgba(180, 155, 80, 0.15);
+    --border-accent: rgba(212, 168, 67, 0.35);
+    --gold: #d4a843;
+    --gold-dim: #a68532;
+    --gold-bright: #f0c75e;
+    --text-primary: #e8e0d0;
+    --text-secondary: #8a8070;
+    --text-muted: #5a5548;
+    --green: #3ddc84;
+    --green-dim: rgba(61, 220, 132, 0.15);
+    --red: #ff5252;
+    --blue: #5b9bf5;
+    --amber: #ffb74d;
 }
 
+/* ── GLOBAL APP BACKGROUND ────────────────────────────────────────── */
+[data-testid="stAppViewContainer"],
+[data-testid="stAppViewContainer"] > div,
+.main .block-container {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-testid="stHeader"] {
+    background: rgba(8, 8, 16, 0.95) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+html, body, [data-testid="stApp"] {
+    background-color: var(--bg-primary) !important;
+}
+
+/* ── SIDEBAR ──────────────────────────────────────────────────────── */
 [data-testid="stSidebar"] {
-    background: #0d0d30;
+    background: var(--bg-secondary) !important;
+    border-right: 1px solid var(--border-subtle) !important;
 }
 
-/* Metric cards */
-[data-testid="stMetric"] {
-    background-color: rgba(20, 20, 60, 0.8);
-    border: 1px solid rgba(100, 100, 255, 0.2);
-    border-radius: 10px;
-    padding: 15px;
+[data-testid="stSidebar"] [data-testid="stMarkdown"] p,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] span {
+    color: var(--text-secondary) !important;
 }
 
-[data-testid="stMetricValue"] {
-    color: #7eb8ff;
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: var(--gold) !important;
 }
 
-/* Headers */
-h1, h2, h3 {
-    color: #c8d6e5 !important;
+/* Sidebar radio buttons — gold accent on selected */
+[data-testid="stSidebar"] [role="radiogroup"] label[data-checked="true"] {
+    color: var(--gold-bright) !important;
 }
 
-/* DataFrames */
-[data-testid="stDataFrame"] {
-    border: 1px solid rgba(100, 100, 255, 0.15);
+[data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
+    color: var(--gold) !important;
+}
+
+/* Sidebar info box */
+[data-testid="stSidebar"] [data-testid="stAlert"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-secondary) !important;
     border-radius: 8px;
 }
 
-/* Tabs */
-[data-testid="stTab"] {
-    color: #a0b0c0;
+/* ── TYPOGRAPHY ───────────────────────────────────────────────────── */
+h1 {
+    color: var(--gold) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.5px !important;
+    font-size: 1.75rem !important;
 }
 
-/* Plotly charts — remove white background */
+h2, [data-testid="stSubheader"] {
+    color: var(--gold-dim) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.2px !important;
+}
+
+h3 {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+p, span, li, td, th, label, div {
+    color: var(--text-primary);
+}
+
+/* Captions */
+[data-testid="stCaptionContainer"] {
+    color: var(--text-muted) !important;
+}
+
+[data-testid="stCaptionContainer"] p {
+    color: var(--text-muted) !important;
+}
+
+/* ── METRIC CARDS ─────────────────────────────────────────────────── */
+[data-testid="stMetric"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 10px !important;
+    padding: 18px 20px !important;
+    transition: border-color 0.3s ease;
+}
+
+[data-testid="stMetric"]:hover {
+    border-color: var(--border-accent) !important;
+}
+
+[data-testid="stMetricLabel"] {
+    color: var(--text-secondary) !important;
+    font-size: 0.72rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+}
+
+[data-testid="stMetricLabel"] p {
+    color: var(--text-secondary) !important;
+    font-size: 0.72rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: var(--text-primary) !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+}
+
+/* ── DATA TABLES ──────────────────────────────────────────────────── */
+[data-testid="stDataFrame"] {
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+[data-testid="stDataFrame"] th {
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+    text-transform: uppercase !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.6px !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+[data-testid="stDataFrame"] td {
+    color: var(--text-primary) !important;
+    border-bottom: 1px solid rgba(180, 155, 80, 0.06) !important;
+    font-size: 0.85rem !important;
+}
+
+/* ── TABS ─────────────────────────────────────────────────────────── */
+[data-testid="stTab"] {
+    color: var(--text-secondary) !important;
+    border-bottom: 2px solid transparent !important;
+    transition: all 0.2s ease;
+}
+
+[data-testid="stTab"]:hover {
+    color: var(--gold) !important;
+}
+
+[data-testid="stTab"][aria-selected="true"] {
+    color: var(--gold-bright) !important;
+    border-bottom-color: var(--gold) !important;
+}
+
+/* ── BUTTONS ──────────────────────────────────────────────────────── */
+[data-testid="stButton"] button {
+    background: var(--bg-card) !important;
+    color: var(--gold) !important;
+    border: 1px solid var(--border-accent) !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    transition: all 0.25s ease;
+}
+
+[data-testid="stButton"] button:hover {
+    background: rgba(212, 168, 67, 0.12) !important;
+    border-color: var(--gold) !important;
+    color: var(--gold-bright) !important;
+}
+
+/* Download button */
+[data-testid="stDownloadButton"] button {
+    background: var(--bg-card) !important;
+    color: var(--gold) !important;
+    border: 1px solid var(--border-accent) !important;
+    border-radius: 6px !important;
+}
+
+/* ── SELECT BOXES & INPUTS ────────────────────────────────────────── */
+[data-testid="stSelectbox"] > div > div {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 6px !important;
+    color: var(--text-primary) !important;
+}
+
+[data-testid="stTextInput"] input {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 6px !important;
+    color: var(--text-primary) !important;
+}
+
+[data-testid="stTextInput"] input:focus {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 1px var(--gold-dim) !important;
+}
+
+/* ── SLIDERS ──────────────────────────────────────────────────────── */
+[data-testid="stSlider"] [role="slider"] {
+    background-color: var(--gold) !important;
+}
+
+/* ── MULTISELECT ──────────────────────────────────────────────────── */
+[data-testid="stMultiSelect"] > div > div {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-primary) !important;
+}
+
+/* ── ALERTS (info, success, warning, error) ────────────────────────── */
+[data-testid="stAlert"] {
+    border-radius: 8px !important;
+}
+
+/* Info */
+[data-testid="stAlert"][data-baseweb*="info"],
+div[data-testid="stAlert"]:has(.st-emotion-cache-info) {
+    background: rgba(91, 155, 245, 0.08) !important;
+    border: 1px solid rgba(91, 155, 245, 0.2) !important;
+}
+
+/* Success */
+div[role="alert"].st-success,
+[data-testid="stAlert"]:has(svg[data-testid="stIconSuccess"]) {
+    background: var(--green-dim) !important;
+    border: 1px solid rgba(61, 220, 132, 0.25) !important;
+}
+
+/* ── DIVIDER / HR ─────────────────────────────────────────────────── */
+hr, [data-testid="stMarkdown"] hr {
+    border-color: var(--border-subtle) !important;
+    opacity: 0.5;
+}
+
+/* ── PLOTLY CHARTS ────────────────────────────────────────────────── */
 .js-plotly-plot .plotly .main-svg {
     background: transparent !important;
+}
+
+.js-plotly-plot {
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* ── EXPANDER ─────────────────────────────────────────────────────── */
+[data-testid="stExpander"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 8px !important;
+}
+
+/* ── RADIO BUTTONS ────────────────────────────────────────────────── */
+[data-testid="stRadio"] label {
+    color: var(--text-secondary) !important;
+}
+
+/* ── CHECKBOX ─────────────────────────────────────────────────────── */
+[data-testid="stCheckbox"] label span {
+    color: var(--text-secondary) !important;
+}
+
+/* ── PROGRESS BARS (in tables) ────────────────────────────────────── */
+[data-testid="stDataFrame"] [role="progressbar"] > div {
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold)) !important;
+}
+
+/* ── SPINNER ──────────────────────────────────────────────────────── */
+[data-testid="stSpinner"] {
+    color: var(--gold) !important;
+}
+
+/* ── SCROLLBAR ────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-subtle);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-dim);
+}
+
+/* ── HIDE STREAMLIT BRANDING ──────────────────────────────────────── */
+#MainMenu, footer, [data-testid="stToolbar"] {
+    display: none !important;
 }

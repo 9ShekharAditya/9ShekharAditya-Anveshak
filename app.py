@@ -1,13 +1,12 @@
 """
-app.py — Main entrypoint for the Exoplanet Confirmation & Habitability Analysis Dashboard.
+app.py — Exoplanet Confirmation & Habitability Dashboard.
 """
 
 import streamlit as st
-import pandas as pd
 import os
 
 st.set_page_config(
-    page_title="Exoplanet Confirmation & Habitability Dashboard",
+    page_title="Exoplanet Dashboard",
     page_icon="🪐",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -25,7 +24,7 @@ if os.path.exists(css_path):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
-@st.cache_data(show_spinner="🛰️ Fetching telescope adapters & running AI confirmation engine...")
+@st.cache_data(show_spinner="🛰️ Fetching data from NASA Exoplanet Archive...")
 def load_and_score_data():
     raw_df = get_unified_candidates(include_confirmed=True)
     scored_df = score_habitability(raw_df)
@@ -34,85 +33,82 @@ def load_and_score_data():
 
 
 def main():
-    # ── Sidebar Branding & Status ────────────────────────────────────
-    st.sidebar.title("🪐 Exoplanet AI")
-    st.sidebar.markdown(
-        "**NASA Exoplanet Archive**  \n"
-        "*Candidate Confirmation, Habitability & 3D Orbital Mechanics*"
-    )
+    # ── Sidebar ──────────────────────────────────────────────────────
+    st.sidebar.markdown("## 🪐 ANVESHAK")
+    st.sidebar.caption("Cosmic Events")
     st.sidebar.markdown("---")
 
-    # Load Full Dataset
+    # Load data
     try:
         full_df = load_and_score_data()
     except Exception as e:
-        st.error(f"Error connecting to NASA Exoplanet Archive: {e}")
+        st.error(f"Error: {e}")
         return
 
-    # ── Global Telescope / Mission Filter ────────────────────────────
-    st.sidebar.subheader("🔭 Telescope Adapter Source")
+    # Telescope Adapter Source — shown in main content area on Dashboard
+    st.sidebar.markdown("##### 🔭 Telescope Adapter Source")
+    st.sidebar.markdown("Select Dataset:")
     mission_choice = st.sidebar.radio(
-        "Select Dataset:",
+        "dataset",
         [
-            "🌌 All Datasets Combined",
-            "🔭 Kepler Candidates (Cumulative)",
-            "🛰️ TESS Candidates (TOI)",
-            "📡 K2 Candidates",
-            "✅ Confirmed Planets (Composite)",
+            "All Datasets Combined",
+            "Kepler Candidates (Cumulative)",
+            "TESS Candidates (TOI)",
+            "K2 Candidates",
+            "Confirmed Planets (Composite)",
         ],
         index=0,
+        label_visibility="collapsed",
     )
 
-    if mission_choice == "🔭 Kepler Candidates (Cumulative)":
-        df = full_df[full_df["source"] == "Kepler"].copy()
-    elif mission_choice == "🛰️ TESS Candidates (TOI)":
-        df = full_df[full_df["source"] == "TESS"].copy()
-    elif mission_choice == "📡 K2 Candidates":
-        df = full_df[full_df["source"] == "K2"].copy()
-    elif mission_choice == "✅ Confirmed Planets (Composite)":
-        df = full_df[full_df["source"] == "Confirmed"].copy()
+    source_map = {
+        "Kepler Candidates (Cumulative)": "Kepler",
+        "TESS Candidates (TOI)": "TESS",
+        "K2 Candidates": "K2",
+        "Confirmed Planets (Composite)": "Confirmed",
+    }
+
+    if mission_choice in source_map:
+        df = full_df[full_df["source"] == source_map[mission_choice]].copy()
     else:
         df = full_df.copy()
 
     st.sidebar.markdown("---")
 
-    # ── Navigation ───────────────────────────────────────────────────
-    st.sidebar.subheader("🧭 Page Navigation")
+    # Navigation
     nav = st.sidebar.radio(
-        "Go to:",
+        "navigation",
         [
-            "🏠 Dashboard",
-            "🔎 Candidate Explorer",
-            "🌌 3D System Viewer",
-            "📈 Population Analytics",
-            "🔬 JWST & ISRO Planning",
+            "Dashboard",
+            "Exoplanet Analysis",
+            "3D System Viewer",
+            "Population Analytics",
+            "JWST & ISRO Planning",
         ],
         index=0,
+        label_visibility="collapsed",
     )
 
     st.sidebar.markdown("---")
-    st.sidebar.info(
-        f"**Active Scope:**  \n"
-        f"- Catalog: **{len(df):,} worlds** (out of {len(full_df):,} total)  \n"
-        f"- In Habitable Zone: **{int(df['in_hz_optimistic'].fillna(False).sum()):,} worlds**  \n"
-        f"- 🟢 High Potential: **{int((df['habitability_tier'] == 'High Potential').sum()):,} worlds**  \n"
-        f"- 🤖 AI Confirmed Likelihood (>80%): **{int((df['ai_confidence_pct'] >= 80).sum()):,} worlds**"
+    st.sidebar.caption(
+        f"**{len(df):,}** worlds loaded · "
+        f"**{int(df['in_hz_optimistic'].fillna(False).sum()):,}** in HZ"
     )
 
-    if st.sidebar.button("🔄 Refresh Data Cache"):
+    if st.sidebar.button("Refresh Data"):
         st.cache_data.clear()
         st.rerun()
 
-    # ── Render Selected Page ─────────────────────────────────────────
-    if nav == "🏠 Dashboard":
+    # ── Page Routing ─────────────────────────────────────────────────
+    if nav == "Dashboard":
         dashboard.show(df, full_df)
-    elif nav == "🔎 Candidate Explorer":
+    elif nav == "Exoplanet Analysis":
         explorer.show(df)
-    elif nav == "🌌 3D System Viewer":
+    elif nav == "3D System Viewer":
         system_viewer.show(df)
-    elif nav == "📈 Population Analytics":
+    elif nav == "Population Analytics":
         analytics.show(df)
-    elif nav == "🔬 JWST & ISRO Planning":
+    elif nav == "JWST & ISRO Planning":
         jwst_isro.show(df)
 
 

@@ -15,17 +15,20 @@ from config import TIER_COLORS, SOURCE_COLORS
 
 
 DARK_TEMPLATE = "plotly_dark"
-DARK_BG = "rgba(10, 10, 46, 0.0)"
+DARK_BG = "rgba(8, 8, 16, 0.0)"
 
 
 def _apply_dark_style(fig):
-    """Apply consistent dark space theme to a figure."""
+    """Apply consistent dark + gold theme to charts."""
     fig.update_layout(
         template=DARK_TEMPLATE,
         paper_bgcolor=DARK_BG,
         plot_bgcolor=DARK_BG,
-        font_color="#c8d6e5",
+        font_color="#8a8070",
+        title_font_color="#d4a843",
         margin=dict(l=40, r=40, t=50, b=40),
+        xaxis=dict(gridcolor="rgba(180,155,80,0.08)", zerolinecolor="rgba(180,155,80,0.12)"),
+        yaxis=dict(gridcolor="rgba(180,155,80,0.08)", zerolinecolor="rgba(180,155,80,0.12)"),
     )
     return fig
 
