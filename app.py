@@ -1,21 +1,21 @@
 """
-app.py — Exoplanet Confirmation & Habitability Dashboard.
+app.py — Exoplanet Dashboard with Top Navigation Bar.
 """
 
 import streamlit as st
 import os
 
 st.set_page_config(
-    page_title="Exoplanet Dashboard",
+    page_title="ANVESHAK — Exoplanet Dashboard",
     page_icon="🪐",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 from data.fetcher import get_unified_candidates
 from science.habitability import score_habitability
 from science.ai_model import predict_confirmation_confidence
-from pages import dashboard, explorer, system_viewer, analytics, jwst_isro
+from app_pages import dashboard, explorer, system_viewer, analytics, jwst_isro
 
 # Inject custom CSS
 css_path = os.path.join(os.path.dirname(__file__), "assets", "style.css")
@@ -33,11 +33,6 @@ def load_and_score_data():
 
 
 def main():
-    # ── Sidebar ──────────────────────────────────────────────────────
-    st.sidebar.markdown("## 🪐 ANVESHAK")
-    st.sidebar.caption("Cosmic Events")
-    st.sidebar.markdown("---")
-
     # Load data
     try:
         full_df = load_and_score_data()
@@ -45,70 +40,75 @@ def main():
         st.error(f"Error: {e}")
         return
 
-    # Telescope Adapter Source — shown in main content area on Dashboard
-    st.sidebar.markdown("##### 🔭 Telescope Adapter Source")
-    st.sidebar.markdown("Select Dataset:")
-    mission_choice = st.sidebar.radio(
-        "dataset",
-        [
-            "All Datasets Combined",
-            "Kepler Candidates (Cumulative)",
-            "TESS Candidates (TOI)",
-            "K2 Candidates",
-            "Confirmed Planets (Composite)",
-        ],
-        index=0,
-        label_visibility="collapsed",
-    )
+    # ── READ & MANAGE QUERY PARAMETERS ────────────────────────────────
+    query_params = st.query_params
+    active_page = query_params.get("page", "Dashboard")
+    dataset_choice = query_params.get("dataset", "All Datasets")
 
+    # If refresh requested, clear cache and clean URL
+    if query_params.get("refresh") == "true":
+        st.cache_data.clear()
+        st.query_params.clear()
+        st.query_params.update(page=active_page, dataset=dataset_choice)
+        st.rerun()
+
+    # ── CUSTOM HTML TOP NAVBAR ────────────────────────────────────────
+    navbar_html = f"""
+    <div class="custom-navbar">
+        <div class="nav-brand">🪐 ANVESHAK</div>
+        <div class="nav-menu">
+            <a class="nav-item {'active' if active_page == 'Dashboard' else ''}" href="?page=Dashboard&dataset={dataset_choice}" target="_self">Dashboard</a>
+            <a class="nav-item {'active' if active_page == 'Exoplanets' else ''}" href="?page=Exoplanets&dataset={dataset_choice}" target="_self">Exoplanets</a>
+            <a class="nav-item {'active' if active_page == '3D Viewer' else ''}" href="?page=3D+Viewer&dataset={dataset_choice}" target="_self">3D Viewer</a>
+            <a class="nav-item {'active' if active_page == 'Analytics' else ''}" href="?page=Analytics&dataset={dataset_choice}" target="_self">Analytics</a>
+            <a class="nav-item {'active' if active_page == 'JWST ISRO' else ''}" href="?page=JWST+ISRO&dataset={dataset_choice}" target="_self">JWST & ISRO</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="nav-dropdown">
+                <button class="dropbtn">🔭 Dataset: {dataset_choice} ▾</button>
+                <div class="dropdown-content">
+                    <a href="?page={active_page}&dataset=All+Datasets" target="_self">All Datasets</a>
+                    <a href="?page={active_page}&dataset=Kepler" target="_self">Kepler (KOI)</a>
+                    <a href="?page={active_page}&dataset=TESS" target="_self">TESS (TOI)</a>
+                    <a href="?page={active_page}&dataset=K2" target="_self">K2 Candidates</a>
+                    <a href="?page={active_page}&dataset=Confirmed" target="_self">Confirmed Planets</a>
+                </div>
+            </div>
+            <a href="?page={active_page}&dataset={dataset_choice}&refresh=true" target="_self"
+               style="text-decoration: none; color: #8a8070; border: 1px solid rgba(180, 155, 80, 0.2); 
+                      padding: 6px 10px; border-radius: 6px; font-size: 13px; font-weight: 500; 
+                      transition: all 0.2s; background: rgba(15,16,32,0.8);"
+               onmouseover="this.style.color='#d4a843'; this.style.borderColor='rgba(212,168,67,0.5)';"
+               onmouseout="this.style.color='#8a8070'; this.style.borderColor='rgba(180,155,80,0.2)';">
+                🔄
+            </a>
+        </div>
+    </div>
+    """
+    st.markdown(navbar_html, unsafe_allow_html=True)
+
+    # ── FILTER DATA BY SOURCE ─────────────────────────────────────────
     source_map = {
-        "Kepler Candidates (Cumulative)": "Kepler",
-        "TESS Candidates (TOI)": "TESS",
-        "K2 Candidates": "K2",
-        "Confirmed Planets (Composite)": "Confirmed",
+        "Kepler": "Kepler",
+        "TESS": "TESS",
+        "K2": "K2",
+        "Confirmed": "Confirmed",
     }
-
-    if mission_choice in source_map:
-        df = full_df[full_df["source"] == source_map[mission_choice]].copy()
+    if dataset_choice in source_map:
+        df = full_df[full_df["source"] == source_map[dataset_choice]].copy()
     else:
         df = full_df.copy()
 
-    st.sidebar.markdown("---")
-
-    # Navigation
-    nav = st.sidebar.radio(
-        "navigation",
-        [
-            "Dashboard",
-            "Exoplanet Analysis",
-            "3D System Viewer",
-            "Population Analytics",
-            "JWST & ISRO Planning",
-        ],
-        index=0,
-        label_visibility="collapsed",
-    )
-
-    st.sidebar.markdown("---")
-    st.sidebar.caption(
-        f"**{len(df):,}** worlds loaded · "
-        f"**{int(df['in_hz_optimistic'].fillna(False).sum()):,}** in HZ"
-    )
-
-    if st.sidebar.button("Refresh Data"):
-        st.cache_data.clear()
-        st.rerun()
-
-    # ── Page Routing ─────────────────────────────────────────────────
-    if nav == "Dashboard":
+    # ── RENDER PAGES ──────────────────────────────────────────────────
+    if active_page == "Dashboard":
         dashboard.show(df, full_df)
-    elif nav == "Exoplanet Analysis":
+    elif active_page == "Exoplanets":
         explorer.show(df)
-    elif nav == "3D System Viewer":
+    elif active_page == "3D Viewer":
         system_viewer.show(df)
-    elif nav == "Population Analytics":
+    elif active_page == "Analytics":
         analytics.show(df)
-    elif nav == "JWST & ISRO Planning":
+    elif active_page == "JWST ISRO" or active_page == "JWST & ISRO":
         jwst_isro.show(df)
 
 
