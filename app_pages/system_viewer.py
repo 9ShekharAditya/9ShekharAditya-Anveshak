@@ -50,13 +50,14 @@ def _get_star_color_and_type(teff):
         return "#70a1ff", "A/B-Star (Blue-White)", "rgba(112, 161, 255, 0.4)"
 
 
-def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, focused_planet_name=None):
-    """Build the high-fidelity 3D Plotly planetary system visualization."""
+def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, focused_planet_name=None, time_scrub=0):
+    """Build the high-fidelity 3D Plotly planetary system visualization with realistic textured globes, deep space background, and orbital animation."""
     fig = go.Figure()
 
     # Determine maximum orbital distance for scaling
     smas = [p["semi_major_axis"] for _, p in system_planets.iterrows() if not np.isnan(p.get("semi_major_axis", np.nan))]
     max_sma = max(smas) if smas else 1.0
+    bound = max_sma * 1.35
 
     # ── 1. HABITABLE ZONE (Discs & Boundaries) ────────────────────────
     hz_outer_display = 0.1
@@ -67,12 +68,13 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
         outer_con = float(hz["outer_con"][0])
         outer_opt = float(hz["outer_opt"][0])
         hz_outer_display = outer_opt
+        bound = max(max_sma, hz_outer_display) * 1.35
 
         # A. Conservative Habitable Zone (Emerald Green - Liquid Water Zone)
         hz_con_disc = generate_hz_disc(inner_con, outer_con)
         fig.add_trace(go.Surface(
             x=hz_con_disc["x"], y=hz_con_disc["y"], z=hz_con_disc["z"],
-            colorscale=[[0, "rgba(46, 213, 115, 0.35)"], [1, "rgba(46, 213, 115, 0.35)"]],
+            colorscale=[[0, "rgba(46, 213, 115, 0.28)"], [1, "rgba(46, 213, 115, 0.28)"]],
             showscale=False,
             name="Conservative Habitable Zone (Liquid Water)",
             hoverinfo="skip",
@@ -98,11 +100,11 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
             hoverinfo="text",
         ))
 
-        # B. Optimistic Habitable Zone (Cyan Outer Shell - Recent Venus to Early Mars)
+        # B. Optimistic Habitable Zone (Cyan Outer Shell)
         hz_opt_inner_disc = generate_hz_disc(inner_opt, inner_con)
         fig.add_trace(go.Surface(
             x=hz_opt_inner_disc["x"], y=hz_opt_inner_disc["y"], z=hz_opt_inner_disc["z"],
-            colorscale=[[0, "rgba(0, 210, 211, 0.14)"], [1, "rgba(0, 210, 211, 0.14)"]],
+            colorscale=[[0, "rgba(0, 210, 211, 0.1)"], [1, "rgba(0, 210, 211, 0.1)"]],
             showscale=False,
             name="Optimistic Inner Zone",
             hoverinfo="skip",
@@ -111,7 +113,7 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
         hz_opt_outer_disc = generate_hz_disc(outer_con, outer_opt)
         fig.add_trace(go.Surface(
             x=hz_opt_outer_disc["x"], y=hz_opt_outer_disc["y"], z=hz_opt_outer_disc["z"],
-            colorscale=[[0, "rgba(0, 210, 211, 0.14)"], [1, "rgba(0, 210, 211, 0.14)"]],
+            colorscale=[[0, "rgba(0, 210, 211, 0.1)"], [1, "rgba(0, 210, 211, 0.1)"]],
             showscale=False,
             name="Optimistic Outer Zone",
             hoverinfo="skip",
@@ -129,25 +131,60 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
             showlegend=False,
         ))
 
-    # ── 2. HOST STAR (Volumetric 3D Sun Sphere) ───────────────────────
+    # Mesh grid for generating realistic 3D surface spheres (low-poly for fast load)
+    n_mesh = 20
+    theta_mesh = np.linspace(0, np.pi, n_mesh)
+    phi_mesh = np.linspace(0, 2 * np.pi, n_mesh)
+    THETA_MESH, PHI_MESH = np.meshgrid(theta_mesh, phi_mesh)
+
+    # Helper function for generating coordinates on a sphere
+    def get_sphere_coords(radius, x_center, y_center, z_center):
+        xs = radius * np.sin(THETA_MESH) * np.cos(PHI_MESH) + x_center
+        ys = radius * np.sin(THETA_MESH) * np.sin(PHI_MESH) + y_center
+        zs = radius * np.cos(THETA_MESH) + z_center
+        return xs, ys, zs
+
+    # ── 2. HOST STAR (Glowing 3D Surface Sphere) ──────────────────────
     star_color, star_type, star_glow = _get_star_color_and_type(st_teff)
+    star_disp_rad = max(0.025 * bound, min(0.06 * bound, (st_radius or 1.0) * 0.035 * bound))
     
-    # Scale star radius visually for 3D visibility
-    star_disp_rad = max(0.025 * max_sma, min(0.07 * max_sma, (st_radius or 1.0) * 0.035 * max_sma))
-    sx, sy, sz = generate_sphere(0, 0, 0, star_disp_rad)
+    # Generate solar surface mesh
+    sx, sy, sz = get_sphere_coords(star_disp_rad, 0, 0, 0)
+    
+    # Procedural star flares texture map
+    star_texture = np.sin(7 * PHI_MESH) * np.cos(7 * THETA_MESH)
+
+    # Beautiful fiery corona colorscales
+    star_colorscales = {
+        "M-Dwarf (Red)": [[0, "#4a0e0e"], [0.4, "#b71c1c"], [0.8, "#f44336"], [1, "#ff8a80"]],
+        "K-Star (Orange)": [[0, "#5e2900"], [0.4, "#e67e22"], [0.8, "#f39c12"], [1, "#ffeaa7"]],
+        "G-Star (Yellow)": [[0, "#5e4a00"], [0.4, "#d4a843"], [0.8, "#f1c40f"], [1, "#ffffff"]],
+        "F-Star (White-Yellow)": [[0, "#3d3d4f"], [0.5, "#dcdde1"], [0.8, "#f5f6fa"], [1, "#ffffff"]],
+        "A/B-Star (Blue-White)": [[0, "#0c2461"], [0.4, "#4a69bd"], [0.8, "#82ccdd"], [1, "#ffffff"]]
+    }
+    star_cmap = star_colorscales.get(star_type, [[0, "#5e4a00"], [0.4, "#d4a843"], [0.8, "#f1c40f"], [1, "#ffffff"]])
+
+    # Cool, clean functional hover text
+    star_hover = (
+        f"<b>⭐ {host_name} ({star_type})</b><br>"
+        f"• Spectral Type: {star_type}<br>"
+        f"• Temperature: {st_teff:.0f} K<br>"
+        f"• Stellar Radius: {st_radius:.2f} R☉<br>"
+        f"• System Center: Barycenter (0.00 AU)"
+    )
 
     fig.add_trace(go.Surface(
         x=sx, y=sy, z=sz,
-        colorscale=[[0, star_color], [1, "#ffffff"]],
+        surfacecolor=star_texture,
+        colorscale=star_cmap,
         showscale=False,
-        name=f"⭐ Star: {host_name} ({star_type})",
-        hovertext=f"<b>Star: {host_name}</b><br>Spectral Class: {star_type}<br>Teff: {st_teff:.0f} K<br>Radius: {st_radius:.2f} R☉"
-                  if st_teff and st_radius else f"<b>Star: {host_name}</b>",
+        name=f"⭐ Star: {host_name}",
+        hovertext=star_hover,
         hoverinfo="text",
     ))
 
     # ── 3. PLANETS & ORBIT PATHS ─────────────────────────────────────
-    palette = ["#00d2d3", "#ff6b6b", "#feca57", "#5f27cd", "#ff9f43", "#1dd1a1", "#ff4757", "#54a0ff"]
+    palette = ["#5b9bf5", "#ffb74d", "#b388ff", "#3ddc84", "#ff5252", "#00cec9"]
 
     for i, (_, planet) in enumerate(system_planets.iterrows()):
         sma = planet.get("semi_major_axis")
@@ -161,9 +198,12 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
 
         p_name = planet["name"]
         is_focused = (focused_planet_name is not None and p_name == focused_planet_name)
-        tier = planet.get("habitability_tier", "Unknown")
         is_habitable = planet.get("in_hz_conservative", False) or planet.get("in_hz_optimistic", False)
         is_confirmed = planet.get("source") == "Confirmed"
+        temp = planet.get("eq_temp", 288.0)
+        p_radius = planet.get("radius", 1.0)
+        if p_radius is None or np.isnan(p_radius):
+            p_radius = 1.0
 
         base_color = palette[i % len(palette)]
         orbit_color = "#2ed573" if is_habitable else base_color
@@ -173,96 +213,124 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
         fig.add_trace(go.Scatter3d(
             x=ox, y=oy, z=oz,
             mode="lines",
-            line=dict(color=orbit_color, width=4 if is_focused else 2.5, dash="solid" if is_habitable else "dot"),
-            name=f"Orbit: {p_name}" + (" [🌿 IN HZ]" if is_habitable else "") + (" [CONFIRMED]" if is_confirmed else " [CANDIDATE]"),
+            line=dict(color=orbit_color, width=4 if is_focused else 2.0, dash="solid" if is_habitable else "dot"),
+            name=f"Orbit: {p_name}" + (" [IN HZ]" if is_habitable else "") + (" [CONFIRMED]" if is_confirmed else " [CANDIDATE]"),
             hoverinfo="skip",
         ))
 
-        # Position planet on orbit
-        phase = (i * 0.35 + 0.15) % 1.0
+        # Position planet on orbit (incorporate time_scrub slider)
+        period = planet.get("period", 365.0)
+        if period is None or np.isnan(period) or period <= 0:
+            period = 365.0
+        
+        # Calculate angular position shift using the time scrubber
+        phase_offset = time_scrub / period
+        phase = (i * 0.35 + 0.15 + phase_offset) % 1.0
         px, py, pz = compute_planet_position(sma, ecc, inc, time_fraction=phase)
 
-        p_radius = planet.get("radius", 1.0)
-        if p_radius is None or np.isnan(p_radius):
-            p_radius = 1.0
-
-        marker_size = max(10, min(26, p_radius * 6))
+        # Scale planet radius visually for 3D visibility
+        planet_disp_rad = max(0.015 * bound, min(0.04 * bound, p_radius * 0.018 * bound))
         if is_focused:
-            marker_size += 8
+            planet_disp_rad *= 1.25
 
-        tag = "🌿 [HABITABLE WORLD]" if is_habitable else ""
+        pxs, pys, pzs = get_sphere_coords(planet_disp_rad, px, py, pz)
+
+        # Realistic surface texture generation based on physical properties
+        if p_radius > 4.0:
+            # Gas Giant bands (wood striped)
+            texture = np.sin(10 * THETA_MESH)
+            cmap = [[0, "#3e2723"], [0.3, "#8d6e63"], [0.6, "#d7ccc8"], [1.0, "#a1887f"]]
+            climate = "Gas Giant (Atmospheric Belts)"
+        elif is_habitable:
+            # Habitable World Continents (green land, blue sea, white poles)
+            texture = np.sin(4 * PHI_MESH) * np.cos(4 * THETA_MESH) + np.cos(1.2 * THETA_MESH) * 0.5
+            cmap = [[0, "#0984e3"], [0.35, "#23a6d5"], [0.45, "#2ed573"], [0.8, "#20bf6b"], [1, "#ffffff"]]
+            climate = "Temperate (Water Oceans & Landmasses)"
+        elif temp > 350:
+            # Scorched / Lava cracked planet
+            texture = np.sin(10 * PHI_MESH) * np.cos(10 * THETA_MESH)
+            cmap = [[0, "#1a0505"], [0.5, "#d35400"], [1.0, "#e74c3c"]]
+            climate = "Scorched (Molten Crust)"
+        elif temp < 200:
+            # Ice sheets / Frozen world
+            texture = np.cos(3 * PHI_MESH) * np.sin(3 * THETA_MESH)
+            cmap = [[0, "#74b9ff"], [0.5, "#81ecec"], [1.0, "#ffffff"]]
+            climate = "Frozen (Glacial Ice Sheets)"
+        else:
+            # Sandy / Rocky terrain
+            texture = np.sin(5 * PHI_MESH) * np.cos(3 * THETA_MESH)
+            cmap = [[0, "#574b90"], [0.5, "#ffeaa7"], [1.0, "#f3a683"]]
+            climate = "Rocky / Barren Crust"
+
         status_tag = "✅ Confirmed Planet" if is_confirmed else "🛰️ Candidate"
-        hover_label = (
-            f"<b>{p_name}</b> ({status_tag}) {tag}<br>"
-            f"Orbital Distance: {sma:.4f} AU<br>"
-            f"Radius: {p_radius:.2f} R⊕ ({planet.get('size_class', 'Unknown')})<br>"
-            f"Eq. Temperature: {planet.get('eq_temp', 'N/A'):.0f} K<br>"
-            f"Earth Similarity (ESI): {planet.get('esi', 0):.3f}<br>"
-            f"Habitability Score: {planet.get('habitability_score', 0):.3f}<br>"
-            f"Atmosphere Retention: {planet.get('atm_retention', 'Unknown')}<br>"
-            f"Period: {planet.get('period', 'N/A'):.1f} days"
+        planet_hover = (
+            f"<b>🪐 {p_name} ({status_tag})</b><br><br>"
+            f"• Radius: {p_radius:.2f} R⊕ ({planet.get('size_class', 'Rocky')})<br>"
+            f"• Orbit Semimajor Axis: {sma:.4f} AU<br>"
+            f"• Period: {period:.1f} days<br>"
+            f"• Climate Regime: {climate}<br>"
+            f"• Temperature: {temp:.0f} K<br>"
+            f"• Earth Similarity (ESI): {planet.get('esi', 0):.2f}"
         )
 
-        fig.add_trace(go.Scatter3d(
-            x=[px], y=[py], z=[pz],
-            mode="markers+text",
-            marker=dict(
-                size=marker_size,
-                color=TIER_COLORS.get(tier, base_color),
-                opacity=1.0,
-                line=dict(width=3 if is_focused else 1.5, color="#ffffff" if is_focused else "rgba(255,255,255,0.7)"),
-                symbol="diamond" if is_focused else "circle"
-            ),
-            text=[f"  <b>{p_name}</b>" + (" 🎯" if is_focused else "") + (" 🌿" if is_habitable else "")],
-            textposition="top right",
-            textfont=dict(size=13 if is_focused else 11, color="#ffffff" if is_focused else "#c8d6e5"),
+        fig.add_trace(go.Surface(
+            x=pxs, y=pys, z=pzs,
+            surfacecolor=texture,
+            colorscale=cmap,
+            showscale=False,
             name=p_name,
-            hovertext=hover_label,
+            hovertext=planet_hover,
             hoverinfo="text",
         ))
 
-        # Focus reticle
+        # Focus reticle (glowing circle beneath planet)
         if is_focused:
-            t_ring = generate_hz_disc(0.02 * max_sma, 0.025 * max_sma, n_radial=2, n_theta=30)
+            t_ring = generate_hz_disc(0.015 * bound, 0.02 * bound, n_radial=2, n_theta=30)
             fig.add_trace(go.Scatter3d(
                 x=px + t_ring["inner_x"], y=py + t_ring["inner_y"], z=pz + np.zeros_like(t_ring["inner_x"]),
                 mode="lines",
                 line=dict(color="#ff4757", width=3.5),
-                name=f"🎯 Target: {p_name}",
+                name=f"🎯 Focus: {p_name}",
                 hoverinfo="skip",
                 showlegend=False,
             ))
 
     # ── 4. SCENE BOUNDARIES & CAMERA ─────────────────────────────────
-    bound = max(max_sma, hz_outer_display) * 1.35
-
     fig.update_layout(
         template="plotly_dark",
-        paper_bgcolor="rgba(10, 10, 36, 1.0)",
+        paper_bgcolor="#000000",
+        plot_bgcolor="#000000",
+        images=[
+            dict(
+                source="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2048&auto=format&fit=crop",
+                xref="paper", yref="paper",
+                x=0, y=1,
+                sizex=1, sizey=1,
+                sizing="stretch",
+                layer="below",
+                opacity=0.6
+            )
+        ],
         scene=dict(
-            xaxis=dict(range=[-bound, bound], title="X (Astronomical Units - AU)",
-                       showbackground=True, backgroundcolor="rgba(5, 5, 20, 0.8)",
-                       gridcolor="rgba(100,100,220,0.18)", zerolinecolor="rgba(255,255,255,0.3)"),
-            yaxis=dict(range=[-bound, bound], title="Y (Astronomical Units - AU)",
-                       showbackground=True, backgroundcolor="rgba(5, 5, 20, 0.8)",
-                       gridcolor="rgba(100,100,220,0.18)", zerolinecolor="rgba(255,255,255,0.3)"),
-            zaxis=dict(range=[-bound * 0.4, bound * 0.4], title="Z (AU)",
-                       showbackground=True, backgroundcolor="rgba(5, 5, 20, 0.8)",
-                       gridcolor="rgba(100,100,220,0.18)", zerolinecolor="rgba(255,255,255,0.3)"),
+            # Equal ranges and cube aspectmode ensures planets are perfect spheres
+            xaxis=dict(range=[-bound * 1.3, bound * 1.3], visible=False, showgrid=False, zeroline=False),
+            yaxis=dict(range=[-bound * 1.3, bound * 1.3], visible=False, showgrid=False, zeroline=False),
+            zaxis=dict(range=[-bound * 1.3, bound * 1.3], visible=False, showgrid=False, zeroline=False),
+            aspectmode='cube',
             camera=dict(eye=dict(x=1.5, y=1.5, z=0.95)),
         ),
         title=dict(
-            text=f"🌌 3D Planetary Architecture: {host_name} (Host Star + Habitable Zone + Orbits)",
-            font=dict(size=16, color="#ffffff"),
+            text=f"🌌 3D System Architecture: {host_name} (Host Star + Habitable Zone + Orbits)",
+            font=dict(size=16, color="#d4a843"),
         ),
-        height=720,
-        margin=dict(l=10, r=10, t=50, b=10),
+        height=750,
+        margin=dict(l=0, r=0, t=50, b=0),
         legend=dict(
             x=0.01, y=0.99,
-            bgcolor="rgba(10,10,30,0.85)",
-            bordercolor="rgba(255,255,255,0.25)",
+            bgcolor="rgba(8,8,16,0.85)",
+            bordercolor="rgba(180,155,80,0.25)",
             borderwidth=1,
-            font=dict(size=11, color="#c8d6e5")
+            font=dict(size=11, color="#8a8070")
         ),
     )
 
@@ -403,18 +471,10 @@ def show(df):
             cam_edge = st.button("➡️ Edge-On (Transit)")
 
     target_planet = None if focused_planet == "(None / Show All)" else focused_planet
-
-    # ── 3D Visualizer ────────────────────────────────────────────────
-    fig = _build_interactive_system_3d(system_planets, selected_host, st_teff, st_radius, target_planet)
-
-    if cam_top:
-        fig.update_layout(scene_camera=dict(eye=dict(x=0, y=0, z=2.4)))
-    elif cam_edge:
-        fig.update_layout(scene_camera=dict(eye=dict(x=2.4, y=0, z=0.04)))
-    elif cam_3d:
-        fig.update_layout(scene_camera=dict(eye=dict(x=1.5, y=1.5, z=0.95)))
-
-    st.plotly_chart(fig, use_container_width=True)
+    # ── 3D WebGL Visualizer (Three.js) ────────────────────────────────────────────────
+    st.markdown("##### 🚀 Real-time WebGL Simulation (Drag to Orbit, Scroll to Zoom)")
+    from app_pages.threejs_visualizer import render_threejs_system
+    render_threejs_system(system_planets, selected_host, st_teff, st_radius, target_planet)
 
     # ── Legend / Explanation Bar ─────────────────────────────────────
     st.markdown(
