@@ -98,7 +98,7 @@ def show(df):
 
     # ── Tab 2: Biosignature Spectrum Simulator ───────────────────────
     with tab2:
-        st.subheader("🧬 Simulated JWST Transit Absorption Spectrum")
+        st.subheader("Simulated JWST Transit Absorption Spectrum")
         st.markdown(
             "Select a habitable candidate to simulate what **JWST NIRSpec + MIRI** would observe "
             "during a transit event. Absorption dips indicate atmospheric gases — "
@@ -128,31 +128,31 @@ def show(df):
                     st.metric("Transmission Spectroscopy Metric (TSM)", f"{tsm_val:.1f}" if not np.isnan(tsm_val) else "N/A")
                     if not np.isnan(tsm_val):
                         if tsm_val > 90:
-                            st.success("🟢 **Excellent JWST target** — atmosphere detectable in ~1-2 transits")
+                            st.success("**Excellent JWST target** — atmosphere detectable in ~1-2 transits")
                         elif tsm_val > 10:
-                            st.info("🟡 **Moderate JWST target** — requires ~5-10 transit observations")
+                            st.info("**Moderate JWST target** — requires ~5-10 transit observations")
                         else:
-                            st.warning("🔴 **Challenging target** — requires stacking many transits")
+                            st.warning("**Challenging target** — requires stacking many transits")
 
                 with c2:
-                    st.markdown("**🧬 Detectable Biosignatures:**")
+                    st.markdown("**Detectable Biosignatures:**")
                     in_hz = p_row.get("in_hz_optimistic", False)
                     if in_hz:
-                        st.write("- 💧 **H₂O** (1.4 μm, 6.3 μm) — Water vapor")
-                        st.write("- 🌿 **O₃** (9.6 μm) — Ozone (photosynthesis byproduct)")
-                        st.write("- 🔥 **CH₄** (3.3 μm) — Methane (biological/geological)")
-                        st.write("- 🫧 **CO₂** (4.3 μm) — Carbon dioxide")
-                        st.success("✅ HZ planet — biosignature detection is scientifically meaningful!")
+                        st.write("- **H₂O** (1.4 μm, 6.3 μm) — Water vapor")
+                        st.write("- **O₃** (9.6 μm) — Ozone (photosynthesis byproduct)")
+                        st.write("- **CH₄** (3.3 μm) — Methane (biological/geological)")
+                        st.write("- **CO₂** (4.3 μm) — Carbon dioxide")
+                        st.success("HZ planet — biosignature detection is scientifically meaningful!")
                     else:
-                        st.write("- 🫧 **CO₂** (4.3 μm) — Likely dominant")
-                        st.write("- 💧 **H₂O** — May be present as steam")
-                        st.info("ℹ️ Outside HZ — biosignatures less likely to indicate life")
+                        st.write("- **CO₂** (4.3 μm) — Likely dominant")
+                        st.write("- **H₂O** — May be present as steam")
+                        st.info("Outside HZ — biosignatures less likely to indicate life")
         else:
             st.warning("No candidates available for spectral simulation.")
 
     # ── Tab 3: Indian Observatory Visibility ─────────────────────────
     with tab3:
-        st.subheader("🇮🇳 Indian Observatory Visibility Assessment")
+        st.subheader("Indian Observatory Visibility Assessment")
         st.markdown(
             "Determine which habitable targets are observable from India's major "
             "astronomical facilities — essential for **ISRO follow-up missions** and "
@@ -163,7 +163,7 @@ def show(df):
         st.markdown(
             """
             <div style="background: rgba(20, 25, 60, 0.6); border: 1px solid rgba(100, 150, 255, 0.25); border-radius: 8px; padding: 14px; margin-bottom: 16px;">
-                <b>🏛️ Indian Observatories in Network:</b><br>
+                <b>Indian Observatories in Network:</b><br>
                 • <b>GMRT</b> (Pune) — World's largest low-freq radio array (NCRA-TIFR)<br>
                 • <b>IAO Hanle</b> (Ladakh, 4500m) — India's highest optical observatory (IIA)<br>
                 • <b>VBO Kavalur</b> (Tamil Nadu) — 2.34m Vainu Bappu Telescope (IIA)<br>
@@ -193,7 +193,7 @@ def show(df):
             else:
                 est_dec = np.random.uniform(-60, 60)  # TESS all-sky
 
-            st.info(f"📍 Estimated target declination: **{est_dec:.1f}°** (based on {source} survey field)")
+            st.info(f"Estimated target declination: **{est_dec:.1f}°** (based on {source} survey field)")
 
             vis_table = get_visibility_table(est_dec)
             st.dataframe(
@@ -206,17 +206,17 @@ def show(df):
             )
 
             # Best observatory recommendation
-            best = vis_table[vis_table["Observable"] == "✅ Yes"]
+            best = vis_table[vis_table["Observable"].str.contains("Yes", na=False)]
             if len(best) > 0:
                 top_obs = best.sort_values("Max Elevation (°)", ascending=False).iloc[0]
                 st.success(
-                    f"🏆 **Best Indian observatory for {target_name}:** "
+                    f"**Best Indian observatory for {target_name}:** "
                     f"**{top_obs['Observatory']}** ({top_obs['Agency']}) — "
                     f"Max elevation {top_obs['Max Elevation (°)']}°, "
                     f"{top_obs['Hours Visible (>30°)']} hours above 30° per night"
                 )
             else:
-                st.warning("⚠️ Target is below optimal elevation from all Indian observatories.")
+                st.warning("Target is below optimal elevation from all Indian observatories.")
         else:
             st.warning("No candidates available for visibility analysis.")
 
