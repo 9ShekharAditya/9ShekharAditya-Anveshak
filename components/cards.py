@@ -21,27 +21,27 @@ def planet_detail_card(row):
     emoji = row.get("tier_emoji", "")
     p_name = row.get("name", "Unknown Planet")
 
-    st.markdown(f"### {emoji} **{p_name}** ({row.get('source', 'NASA Mission')})")
+    st.markdown(f"### **{p_name}** ({row.get('source', 'NASA Mission')})")
 
     # Habitable Zone Status Banner
     if row.get("in_hz_conservative"):
-        st.success("✅ **Conservative Habitable Zone** (Kopparapu 2013: Liquid surface water possible under Earth-like greenhouse atmosphere)")
+        st.success("**Conservative Habitable Zone** (Kopparapu 2013: Liquid surface water possible under Earth-like greenhouse atmosphere)")
     elif row.get("in_hz_optimistic"):
-        st.info("🔵 **Optimistic Habitable Zone** (Recent Venus / Early Mars boundary regime)")
+        st.info("**Optimistic Habitable Zone** (Recent Venus / Early Mars boundary regime)")
     else:
-        st.warning("⚠️ **Outside Habitable Zone** (Too scorched or frozen for surface liquid water)")
+        st.warning("**Outside Habitable Zone** (Too scorched or frozen for surface liquid water)")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown("**🌌 Orbital Mechanics**")
+        st.markdown("**Orbital Mechanics**")
         st.write(f"- **Semi-Major Axis:** {row.get('semi_major_axis', 0):.4f} AU" if row.get('semi_major_axis') else "- **Semi-Major Axis:** N/A")
         st.write(f"- **Orbital Period:** {row.get('period', 0):.2f} days" if row.get('period') else "- **Period:** N/A")
         st.write(f"- **Eccentricity:** {row.get('eccentricity', 0):.3f}" if row.get('eccentricity') else "- **Eccentricity:** 0.000 (Circular)")
         st.write(f"- **Insolation Flux:** {row.get('insol', 1.0):.3f} S⊕")
 
     with col2:
-        st.markdown("**🪐 Planetary Physical State**")
+        st.markdown("**Planetary Physical State**")
         st.write(f"- **Radius:** {row.get('radius', 1.0):.2f} R⊕ ({row.get('size_class', 'Unknown')})")
         st.write(f"- **Estimated Mass:** {row.get('estimated_mass', 1.0):.2f} M⊕")
         st.write(f"- **Escape Velocity (v_esc):** {row.get('escape_velocity_kms', 11.2):.1f} km/s")

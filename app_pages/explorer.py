@@ -22,13 +22,13 @@ def show(df):
             "Sort by Metric:",
             ["habitability_score", "esi", "radius", "eq_temp", "period", "insol", "escape_velocity_kms"],
             format_func=lambda x: {
-                "habitability_score": "🏆 Habitability Composite Score (↓)",
-                "esi": "🌍 Earth Similarity Index (↓)",
-                "radius": "📏 Planet Radius (R⊕)",
-                "eq_temp": "🌡️ Equilibrium Temperature (K)",
-                "period": "⏱️ Orbital Period (days)",
-                "insol": "☀️ Stellar Insolation Flux (S⊕)",
-                "escape_velocity_kms": "🚀 Escape Velocity (km/s)",
+                "habitability_score": "Habitability Composite Score (↓)",
+                "esi": "Earth Similarity Index (ESI) (↓)",
+                "radius": "Planetary Radius (R⊕)",
+                "eq_temp": "Equilibrium Temperature (K)",
+                "period": "Orbital Period (days)",
+                "insol": "Stellar Insolation Flux (S⊕)",
+                "escape_velocity_kms": "Escape Velocity (km/s)",
             }.get(x, x),
         )
     with col2:

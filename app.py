@@ -55,7 +55,7 @@ def main():
     # ── CUSTOM HTML TOP NAVBAR ────────────────────────────────────────
     navbar_html = f"""
     <div class="custom-navbar">
-        <div class="nav-brand">🪐 ANVESHAK</div>
+        <div class="nav-brand">ANVESHAK</div>
         <div class="nav-menu">
             <a class="nav-item {'active' if active_page == 'Dashboard' else ''}" href="?page=Dashboard&dataset={dataset_choice}" target="_self">Dashboard</a>
             <a class="nav-item {'active' if active_page == 'Exoplanets' else ''}" href="?page=Exoplanets&dataset={dataset_choice}" target="_self">Exoplanets</a>
@@ -65,7 +65,7 @@ def main():
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
             <div class="nav-dropdown">
-                <button class="dropbtn">🔭 Dataset: {dataset_choice} ▾</button>
+                <button class="dropbtn">Dataset: {dataset_choice} ▾</button>
                 <div class="dropdown-content">
                     <a href="?page={active_page}&dataset=All+Datasets" target="_self">All Datasets</a>
                     <a href="?page={active_page}&dataset=Kepler" target="_self">Kepler (KOI)</a>

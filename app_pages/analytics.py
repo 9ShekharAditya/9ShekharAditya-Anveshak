@@ -49,13 +49,13 @@ def show(df):
 
     # ── Chart Tabs ───────────────────────────────────────────────────
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
-        "📊 Radius Gap",
-        "🔵 Period vs Radius",
-        "🌍 Radius vs Insolation",
-        "🟢 HZ Occupancy",
-        "🌡️ ESI Distribution",
-        "⭐ Stellar Types",
-        "🤖 AI Confirmation Confidence",
+        "Radius Gap",
+        "Period vs Radius",
+        "Radius vs Insolation",
+        "HZ Occupancy",
+        "ESI Distribution",
+        "Stellar Types",
+        "AI Confirmation Confidence",
     ])
 
     with tab1:
@@ -173,13 +173,13 @@ def show(df):
                 c1, c2, c3 = st.columns(3)
                 with c1:
                     high_conf = (candidates_only["ai_confidence_pct"] >= 80).sum()
-                    st.metric("🟢 High Confidence (>80%)", f"{high_conf:,}")
+                    st.metric("High Confidence (>80%)", f"{high_conf:,}")
                 with c2:
                     med_conf = ((candidates_only["ai_confidence_pct"] >= 50) & (candidates_only["ai_confidence_pct"] < 80)).sum()
-                    st.metric("🟡 Moderate (50–80%)", f"{med_conf:,}")
+                    st.metric("Moderate (50–80%)", f"{med_conf:,}")
                 with c3:
                     low_conf = (candidates_only["ai_confidence_pct"] < 50).sum()
-                    st.metric("🔴 False-Positive Risk (<50%)", f"{low_conf:,}")
+                    st.metric("False-Positive Risk (<50%)", f"{low_conf:,}")
 
                 st.info(
                     "The **AI Confirmation Confidence Engine** uses multi-planet system validation "

@@ -394,7 +394,7 @@ def _build_planet_globe(planet_row):
 
 
 def show(df):
-    st.title("🌌 3D Planetary System & Habitable Zone Explorer")
+    st.title("3D Planetary System & Habitable Zone Explorer")
     st.caption("High-definition 3D Keplerian orbital mechanics, Kopparapu (2013) Habitable Zones, and researcher astrobiology inferences")
 
     valid = df[df["semi_major_axis"].notna()].copy()
@@ -405,23 +405,23 @@ def show(df):
     hosts = valid["host_name"].dropna().unique().tolist()
 
     # ── System Selection ─────────────────────────────────────────────
-    st.markdown("### 🔭 Select Planetary System")
+    st.markdown("### Select Planetary System")
     col1, col2 = st.columns([3, 1])
 
     with col1:
-        search = st.text_input("🔍 Search by Star or Planet Name (e.g. Kepler-452, TOI-700, TRAPPIST-1, 10007916)", "")
+        search = st.text_input("Search by Star or Planet Name (e.g. Kepler-452, TOI-700, TRAPPIST-1, 10007916)", "")
 
     with col2:
         category_filter = st.selectbox("Filter systems", [
-            "🏆 Top Habitable Systems",
-            "🌌 All Systems (Search)",
-            "🪐 Multi-Planet Systems",
+            "Top Habitable Systems",
+            "All Systems (Search)",
+            "Multi-Planet Systems",
         ])
 
-    if category_filter == "🏆 Top Habitable Systems":
+    if category_filter == "Top Habitable Systems":
         top = valid.nlargest(40, "habitability_score")
         hosts_filtered = top["host_name"].dropna().unique().tolist()
-    elif category_filter == "🪐 Multi-Planet Systems":
+    elif category_filter == "Multi-Planet Systems":
         counts = valid["host_name"].value_counts()
         multi = counts[counts >= 2].index.tolist()
         hosts_filtered = multi[:50]
@@ -457,22 +457,22 @@ def show(df):
     col_p1, col_p2 = st.columns([2, 2])
     with col_p1:
         focused_planet = st.selectbox(
-            "🎯 Highlight Planet in 3D Model:",
+            "Highlight Planet in 3D Model:",
             ["(None / Show All)"] + planet_names
         )
     with col_p2:
-        st.write("📐 Camera View Presets:")
+        st.write("Camera View Presets:")
         cam_col1, cam_col2, cam_col3 = st.columns(3)
         with cam_col1:
-            cam_3d = st.button("🔄 3D Orbit")
+            cam_3d = st.button("3D Orbit")
         with cam_col2:
-            cam_top = st.button("⬆️ Top-Down (Plane)")
+            cam_top = st.button("Top-Down (Plane)")
         with cam_col3:
-            cam_edge = st.button("➡️ Edge-On (Transit)")
+            cam_edge = st.button("Edge-On (Transit)")
 
     target_planet = None if focused_planet == "(None / Show All)" else focused_planet
     # ── 3D WebGL Visualizer (Three.js) ────────────────────────────────────────────────
-    st.markdown("##### 🚀 Real-time WebGL Simulation (Drag to Orbit, Scroll to Zoom)")
+    st.markdown("##### Real-time WebGL Simulation (Drag to Orbit, Scroll to Zoom)")
     from app_pages.threejs_visualizer import render_threejs_system
     render_threejs_system(system_planets, selected_host, st_teff, st_radius, target_planet)
 
@@ -480,19 +480,19 @@ def show(df):
     st.markdown(
         """
         <div style="background: rgba(20, 20, 50, 0.7); border: 1px solid rgba(100, 100, 255, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
-            <b>🗺️ 3D Model Legend:</b>
-            <span style="color: #ffd32a; margin-left: 15px;">⭐ Central Glowing Sun</span>
-            <span style="color: #2ed573; margin-left: 15px;">🌿 Green Disc = Conservative Habitable Zone (Liquid Water)</span>
-            <span style="color: #00d2d3; margin-left: 15px;">🔵 Cyan Disc = Optimistic Habitable Zone</span>
-            <span style="color: #ff4757; margin-left: 15px;">🎯 Red Reticle = Highlighted Planet</span>
+            <b>3D Model Legend:</b>
+            <span style="color: #ffd32a; margin-left: 15px;">Central Glowing Sun</span>
+            <span style="color: #2ed573; margin-left: 15px;">Green Disc = Conservative Habitable Zone (Liquid Water)</span>
+            <span style="color: #00d2d3; margin-left: 15px;">Cyan Disc = Optimistic Habitable Zone</span>
+            <span style="color: #ff4757; margin-left: 15px;">Red Reticle = Highlighted Planet</span>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    # ── 🔬 Astrobiologist & Researcher Scientific Inference Deck ─────
+    # ── Astrobiologist & Researcher Scientific Inference Deck ─────
     st.markdown("---")
-    st.subheader("🔬 Astrobiology & Planetary Science Inferences")
+    st.subheader("Astrobiology & Planetary Science Inferences")
     st.caption("Deep physical modeling for astrobiological assessment and atmospheric characterization feasibility:")
 
     inspect_p = target_planet if target_planet else planet_names[0]
@@ -508,18 +508,18 @@ def show(df):
         st.markdown(f"### Telemetry: **{p_row['name']}**")
         
         if p_row.get("in_hz_conservative"):
-            st.success("✅ **Inside Conservative Habitable Zone** (Kopparapu 2013: Runaway to Max Greenhouse)")
+            st.success("**Inside Conservative Habitable Zone** (Kopparapu 2013: Runaway to Max Greenhouse)")
         elif p_row.get("in_hz_optimistic"):
-            st.info("🔵 **Inside Optimistic Habitable Zone** (Recent Venus / Early Mars boundary)")
+            st.info("**Inside Optimistic Habitable Zone** (Recent Venus / Early Mars boundary)")
         else:
-            st.warning("⚠️ **Outside Habitable Zone**")
+            st.warning("**Outside Habitable Zone**")
 
         st.markdown(f"""
         <div style="background: rgba(20, 25, 60, 0.6); border: 1px solid rgba(100, 150, 255, 0.25); border-radius: 8px; padding: 14px;">
-            <b>🪐 Planetary Astrophysics & Atmosphere:</b><br>
+            <b>Planetary Astrophysics & Atmosphere:</b><br>
             • <b>Habitability Composite Score:</b> <span style="color: #2ed573; font-weight: bold;">{p_row.get('habitability_score', 0):.3f}</span> / 1.000<br>
             • <b>Earth Similarity Index (ESI):</b> <span style="color: #2ed573; font-weight: bold;">{p_row.get('esi', 0):.3f}</span> / 1.000<br>
-            • <b>🤖 AI Confirmation Confidence:</b> <span style="color: #54a0ff; font-weight: bold;">{p_row.get('ai_confidence_pct', 50):.0f}%</span> ({p_row.get('ai_validation_label', 'N/A')})<br>
+            • <b>AI Confirmation Confidence:</b> <span style="color: #54a0ff; font-weight: bold;">{p_row.get('ai_confidence_pct', 50):.0f}%</span> ({p_row.get('ai_validation_label', 'N/A')})<br>
             • <b>Atmospheric Retention:</b> <span style="color: #70a1ff;">{p_row.get('atm_retention', 'Unknown')}</span> (v_esc = {p_row.get('escape_velocity_kms', 11.2):.1f} km/s)<br>
             • <b>Tidal Lock State:</b> <span style="color: #ffa801;">{p_row.get('tidal_lock', 'Unknown')}</span><br>
             • <b>Stellar UV / Flare Hazard:</b> <span style="color: #ff4757;">{p_row.get('uv_flare_risk', 'Low')}</span><br>
@@ -531,7 +531,7 @@ def show(df):
 
     # ── NASA Eyes on Exoplanets — Direct Launch ─────────────────────────
     st.markdown("---")
-    st.subheader("🚀 NASA Eyes on Exoplanets — 3D Universe Explorer")
+    st.subheader("NASA Eyes on Exoplanets — 3D Universe Explorer")
     st.caption("NASA Eyes blocks iframe embedding for security. Use the buttons below to launch it directly in a new tab:")
 
     clean_target = str(selected_host).replace(" ", "_")
@@ -545,7 +545,6 @@ def show(df):
         <div style="background: linear-gradient(135deg, rgba(10,10,50,0.95), rgba(20,20,80,0.9));
                     border: 2px solid rgba(100, 140, 255, 0.5); border-radius: 14px;
                     padding: 28px; text-align: center; font-family: -apple-system, sans-serif;">
-            <div style="font-size: 42px; margin-bottom: 8px;">🚀🌌</div>
             <h2 style="color: #ffffff; margin: 0 0 6px 0; font-size: 22px;">
                 NASA Eyes on Exoplanets
             </h2>
@@ -560,7 +559,7 @@ def show(df):
                           transition: transform 0.2s; border: none; cursor: pointer;"
                    onmouseover="this.style.transform='scale(1.05)'"
                    onmouseout="this.style.transform='scale(1.0)'">
-                    🔭 Fly to {selected_host}
+                    Fly to {selected_host}
                 </a>
                 <a href="{eyes_home_url}" target="_blank" rel="noopener noreferrer"
                    style="background: linear-gradient(135deg, #00b894, #00cec9); color: white;
@@ -569,7 +568,7 @@ def show(df):
                           transition: transform 0.2s; border: none; cursor: pointer;"
                    onmouseover="this.style.transform='scale(1.05)'"
                    onmouseout="this.style.transform='scale(1.0)'">
-                    🌌 Open Full Universe
+                    Open Full Universe
                 </a>
                 <a href="{archive_url}" target="_blank" rel="noopener noreferrer"
                    style="background: linear-gradient(135deg, #636e72, #2d3436); color: white;
@@ -578,7 +577,7 @@ def show(df):
                           transition: transform 0.2s; border: none; cursor: pointer;"
                    onmouseover="this.style.transform='scale(1.05)'"
                    onmouseout="this.style.transform='scale(1.0)'">
-                    🛰️ NASA Archive Page
+                    NASA Archive Page
                 </a>
             </div>
             <p style="color: #636e72; font-size: 11px; margin-top: 16px;">

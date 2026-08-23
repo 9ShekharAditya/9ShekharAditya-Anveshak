@@ -113,9 +113,9 @@ TIER_COLORS = {
 }
 
 TIER_EMOJIS = {
-    "High Potential": "🟢",
-    "Moderate Potential": "🟡",
-    "Low Potential": "🔴",
+    "High Potential": "",
+    "Moderate Potential": "",
+    "Low Potential": "",
     "Not Habitable": "⚫",
 }
 

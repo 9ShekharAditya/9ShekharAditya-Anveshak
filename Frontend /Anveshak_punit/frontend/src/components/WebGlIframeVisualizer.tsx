@@ -72,8 +72,8 @@ export default function WebGlIframeVisualizer({ system }: { system: any }) {
     <body>
     <div id="tooltip"></div>
     <div id="controls">
-        <div style="position:absolute; top:-35px; left:50%; transform:translateX(-50%); width:300px; text-align:center; color:#4ade80; font-size:12px; font-weight:bold; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px;">🖱️ Click a planet to track and zoom in! Click space to reset.</div>
-        <label>⏱️ Orbit Speed</label>
+        <div style="position:absolute; top:-35px; left:50%; transform:translateX(-50%); width:300px; text-align:center; color:#4ade80; font-size:12px; font-weight:bold; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:4px;">Click a planet to track and zoom in! Click space to reset.</div>
+        <label>Orbit Speed</label>
         <input type="range" id="speedSlider" min="0" max="10" step="0.1" value="1">
     </div>
     <div id="three-container" style="width: 100%; height: 100vh;"></div>
@@ -228,7 +228,7 @@ export default function WebGlIframeVisualizer({ system }: { system: any }) {
             
             mesh.userData = { 
                 isPlanet: true, 
-                htmlInfo: "<b style='color:" + p.color + ";font-size:15px'>🪐 " + p.name + "</b><br>Radius: " + p.radius.toFixed(2) + " R⊕<br>Orbit: " + p.sma.toFixed(3) + " AU<br>Period: " + p.period.toFixed(1) + " days<br>Temp: " + p.temp.toFixed(0) + " K<br>Climate: " + p.climate 
+                htmlInfo: "<b style='color:" + p.color + ";font-size:15px'>" + p.name + "</b><br>Radius: " + p.radius.toFixed(2) + " R⊕<br>Orbit: " + p.sma.toFixed(3) + " AU<br>Period: " + p.period.toFixed(1) + " days<br>Temp: " + p.temp.toFixed(0) + " K<br>Climate: " + p.climate 
             };
             interactables.push(mesh);
             
