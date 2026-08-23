@@ -1,0 +1,74 @@
+import httpx
+import pandas as pd
+from fastapi import APIRouter
+from app.services.science.habitability import score_habitability
+
+# ... existing code ...
+
+@router.get("/candidates")
+async def get_habitable_candidates():
+    """Fetch real habitable candidates dynamically from NASA API for the frontend."""
+    query = """
+    SELECT pl_name, hostname, discoverymethod, pl_rade, pl_masse, pl_orbsmax, pl_orbper, pl_eqt, pl_insol, st_teff, st_rad
+    FROM pscomppars
+    WHERE pl_rade > 0.5 AND pl_rade < 2.5 
+      AND pl_eqt > 180 AND pl_eqt < 320
+    """
+    
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            "https://exoplanetarchive.ipac.caltech.edu/TAP/sync",
+            data={"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": query},
+            timeout=30.0
+        )
+    
+    from io import StringIO
+    df = pd.read_csv(StringIO(resp.text))
+    
+    # Map to internal columns expected by score_habitability
+    df = df.rename(columns={
+        "pl_name": "planet_name",
+        "hostname": "host_name",
+        "discoverymethod": "discovery_method",
+        "pl_rade": "radius",
+        "pl_masse": "mass",
+        "pl_orbsmax": "semi_major_axis",
+        "pl_orbper": "orbital_period",
+        "pl_eqt": "eq_temp",
+        "pl_insol": "insol",
+        "st_teff": "st_teff",
+        "st_rad": "st_radius"
+    })
+    
+    # score habitability handles missing hz_inner etc. if st_teff and st_radius exist!
+    # wait, score_habitability needs st_teff and st_radius to calculate hz_inner_con etc.
+    from app.services.science.habitability import compute_hz_distances
+    # compute HZ distances
+    for idx, row in df.iterrows():
+        if pd.notna(row['st_teff']) and pd.notna(row['st_radius']):
+            hz = compute_hz_distances(row['st_teff'], row['st_radius'])
+            df.at[idx, 'hz_inner_con'] = hz['hz_inner_con']
+            df.at[idx, 'hz_outer_con'] = hz['hz_outer_con']
+            df.at[idx, 'hz_inner_opt'] = hz['hz_inner_opt']
+            df.at[idx, 'hz_outer_opt'] = hz['hz_outer_opt']
+    
+    scored_df = score_habitability(df).sort_values("habitability_score", ascending=False).head(100)
+    
+    candidates = []
+    for idx, row in scored_df.iterrows():
+        candidates.append({
+            "id": idx,
+            "tier": row.get("habitability_tier", "Low"),
+            "planet": row["planet_name"],
+            "mission": row["discovery_method"] if "Kepler" not in row["planet_name"] else "Kepler",
+            "radius": float(row["radius"]) if pd.notna(row["radius"]) else 1.0,
+            "temp": float(row["eq_temp"]) if pd.notna(row["eq_temp"]) else 255.0,
+            "insol": float(row["insol"]) if pd.notna(row["insol"]) else 1.0,
+            "esi": float(row.get("esi", 0.0)),
+            "score": float(row.get("habitability_score", 0.0)),
+            "sizeClass": row.get("size_class", "Earth-sized"),
+            "tidalLock": "Tidally Locked" if row.get("is_tidally_locked") else "Unlikely Locked",
+            "inHz": bool(row.get("in_hz_optimistic", False))
+        })
+        
+    return {"candidates": candidates}

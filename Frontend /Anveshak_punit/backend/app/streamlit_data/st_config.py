@@ -53,7 +53,7 @@ HZ_COEFFICIENTS = {
     },
 }
 
-# Earth Similarity Index (ESI) Reference Values
+# ─── Earth Similarity Index (ESI) Reference Values ───────────────────
 # These are Earth's values — we compare every candidate against these
 EARTH = {
     "radius": 1.0,          # Earth radii
@@ -70,7 +70,7 @@ ESI_WEIGHTS = {
     "eq_temp": 5.58,
 }
 
-# Planet Classification Thresholds
+# ─── Planet Classification Thresholds ─────────────────────────────────
 # Based on radius in Earth radii
 SIZE_CLASSES = {
     "Sub-Earth":     (0.0,  0.8),
@@ -82,7 +82,7 @@ SIZE_CLASSES = {
     "Jupiter-sized": (11.0, float("inf")),
 }
 
-# Scoring Weights
+# ─── Habitability Scoring Weights ────────────────────────────────────
 HABIT_WEIGHTS = {
     "hz_position": 0.35,   # how centered in habitable zone
     "size_score": 0.25,    # penalty for being too big/small
@@ -93,18 +93,18 @@ HABIT_WEIGHTS = {
 # Optimal temperature range for habitability scoring (Kelvin)
 TEMP_OPTIMAL = (200, 320)
 
-# Tidal Locking
+# ─── Tidal Locking ───────────────────────────────────────────────────
 # Stars cooler than this are M-dwarfs where tidal locking matters
 MDWARF_TEFF_THRESHOLD = 3700  # Kelvin
 TIDAL_LOCK_SEMI_MAJOR_AU = 0.5  # approximate tidal lock radius for M-dwarfs
 
-# Mass-Radius Relation (Chen & Kipping 2017, simplified)
+# ─── Mass-Radius Relation (Chen & Kipping 2017, simplified) ─────────
 # Used to ESTIMATE mass when not measured
 # log10(M) = a + b * log10(R)  (in Earth units)
 MASS_RADIUS_TERRAN = {"a": 0.0, "b": 3.268}     # R < 1.23 R_earth
 MASS_RADIUS_NEPTUNIAN = {"a": 0.0, "b": 1.70}    # 1.23 < R < 14.26 R_earth
 
-# Display Settings
+# ─── Display Settings ────────────────────────────────────────────────
 TIER_COLORS = {
     "High Potential": "#3ddc84",      # green
     "Moderate Potential": "#d4a843",   # gold

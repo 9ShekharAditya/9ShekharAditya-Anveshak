@@ -15,7 +15,7 @@ from pathlib import Path
 
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import TAP_URL, CACHE_DIR, CACHE_TTL_HOURS
+from .st_config import TAP_URL, CACHE_DIR, CACHE_TTL_HOURS
 
 
 class BaseTelescopeAdapter(ABC):

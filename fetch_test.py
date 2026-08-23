@@ -5,7 +5,7 @@ from io import StringIO  # lets pandas read text as if it were a file
 # This is NASA's Exoplanet Archive API endpoint
 URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
 
-# This is a SQL query — it asks NASA's database:
+# This is a SQL query it asks NASA's database:
 # "Give me the first 10 Kepler candidates that are NOT confirmed yet"
 query = """
 SELECT kepid, koi_disposition, koi_period, koi_prad, koi_teq, koi_insol, koi_steff

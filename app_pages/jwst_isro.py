@@ -22,7 +22,7 @@ from config import SOURCE_COLORS
 
 
 def show(df):
-    st.title("🔬 JWST Characterization & ISRO Observatory Planning")
+    st.title("JWST Characterization & ISRO Observatory Planning")
     st.caption(
         "Transit Spectroscopy Metrics (Kempton et al. 2018), synthetic biosignature spectra, "
         "and target visibility from Indian ground-based observatories"
@@ -33,14 +33,14 @@ def show(df):
         scored = score_jwst_feasibility(df)
 
     tab1, tab2, tab3 = st.tabs([
-        "🛰️ JWST Target Priority Ranking",
-        "🧬 Biosignature Spectrum Simulator",
-        "🇮🇳 Indian Observatory Visibility",
+        "JWST Target Priority Ranking",
+        "Biosignature Spectrum Simulator",
+        "Indian Observatory Visibility",
     ])
 
     # ── Tab 1: JWST Priority Ranking ─────────────────────────────────
     with tab1:
-        st.subheader("🛰️ JWST Follow-Up Target Priority (Kempton et al. 2018)")
+        st.subheader("JWST Follow-Up Target Priority (Kempton et al. 2018)")
         st.markdown(
             "The **Transmission Spectroscopy Metric (TSM)** predicts how easily JWST can "
             "detect atmospheric features during planetary transits. Higher TSM = better target. "
