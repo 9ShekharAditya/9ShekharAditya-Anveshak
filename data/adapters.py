@@ -113,9 +113,9 @@ class TessAdapter(BaseTelescopeAdapter):
 
     def get_query(self) -> str:
         return """
-        SELECT toi, toipfx, tfopwg_disp, pl_orbper, pl_rade, pl_insol,
-               pl_eqt, pl_orbsmax, pl_orbeccen, pl_orbincl,
-               st_teff, st_rad, st_mass
+        SELECT toi, toipfx, tfopwg_disp,
+               pl_orbper, pl_rade, pl_insol, pl_eqt,
+               st_teff, st_rad
         FROM toi
         WHERE tfopwg_disp = 'PC'
         """
@@ -131,12 +131,12 @@ class TessAdapter(BaseTelescopeAdapter):
             "mass": pd.NA,
             "insol": df["pl_insol"],
             "eq_temp": df["pl_eqt"],
-            "semi_major_axis": df["pl_orbsmax"],
-            "eccentricity": df["pl_orbeccen"],
-            "inclination": df["pl_orbincl"],
+            "semi_major_axis": pd.NA,
+            "eccentricity": pd.NA,
+            "inclination": pd.NA,
             "st_teff": df["st_teff"],
             "st_radius": df["st_rad"],
-            "st_mass": df["st_mass"],
+            "st_mass": pd.NA,
         })
 
 
