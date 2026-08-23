@@ -34,7 +34,6 @@ interface Observatory {
   visibilityStatus: 'Optimal Night Window' | 'Partial Window' | 'Low Altitude';
   airmassMin: number;
   windowIST: string;
-  icon: string;
 }
 
 /* ─── Datasets ───────────────────────────────────────────── */
@@ -62,8 +61,7 @@ const INDIAN_OBSERVATORIES: Observatory[] = [
     coords: '29.36° N, 79.68° E',
     visibilityStatus: 'Optimal Night Window',
     airmassMin: 1.08,
-    windowIST: '22:15 - 04:45 IST',
-    icon: '🏔️'
+    windowIST: '22:15 - 04:45 IST'
   },
   {
     name: 'Indian Astronomical Observatory (IAO)',
@@ -73,8 +71,7 @@ const INDIAN_OBSERVATORIES: Observatory[] = [
     coords: '32.78° N, 78.96° E',
     visibilityStatus: 'Optimal Night Window',
     airmassMin: 1.04,
-    windowIST: '21:30 - 05:15 IST',
-    icon: '⛰️'
+    windowIST: '21:30 - 05:15 IST'
   },
   {
     name: 'Vainu Bappu Observatory (VBO)',
@@ -84,8 +81,7 @@ const INDIAN_OBSERVATORIES: Observatory[] = [
     coords: '12.57° N, 78.82° E',
     visibilityStatus: 'Partial Window',
     airmassMin: 1.25,
-    windowIST: '23:00 - 03:30 IST',
-    icon: '🔭'
+    windowIST: '23:00 - 03:30 IST'
   },
   {
     name: 'Mount Abu InfraRed Observatory (MIRO)',
@@ -95,8 +91,7 @@ const INDIAN_OBSERVATORIES: Observatory[] = [
     coords: '24.65° N, 72.78° E',
     visibilityStatus: 'Optimal Night Window',
     airmassMin: 1.12,
-    windowIST: '22:00 - 04:15 IST',
-    icon: '🌌'
+    windowIST: '22:00 - 04:15 IST'
   }
 ];
 
@@ -187,7 +182,6 @@ export default function JwstObservatoryPlanningPage() {
               : 'text-text-muted hover:text-text'
           }`}
         >
-          <span className="text-sm">📌</span>
           <span>JWST Target Priority Ranking</span>
           {activeTab === 'ranking' && (
             <div className="absolute bottom-[-13px] left-0 right-0 h-0.5 bg-gold shadow-sm shadow-gold/50" />
@@ -202,7 +196,6 @@ export default function JwstObservatoryPlanningPage() {
               : 'text-text-muted hover:text-text'
           }`}
         >
-          <span className="text-sm">🪐</span>
           <span>Biosignature Spectrum Simulator</span>
           {activeTab === 'simulator' && (
             <div className="absolute bottom-[-13px] left-0 right-0 h-0.5 bg-gold shadow-sm shadow-gold/50" />
@@ -217,7 +210,6 @@ export default function JwstObservatoryPlanningPage() {
               : 'text-text-muted hover:text-text'
           }`}
         >
-          <span className="text-sm">🇮🇳</span>
           <span>Indian Observatory Visibility</span>
           {activeTab === 'observatories' && (
             <div className="absolute bottom-[-13px] left-0 right-0 h-0.5 bg-gold shadow-sm shadow-gold/50" />
@@ -230,7 +222,6 @@ export default function JwstObservatoryPlanningPage() {
         <div className="space-y-6 animate-fade-in">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg leading-none">🛰️</span>
               <h2 className="text-lg font-bold text-text tracking-wide">
                 JWST Follow-Up Target Priority (Kempton et al. 2018)
               </h2>
@@ -259,7 +250,7 @@ export default function JwstObservatoryPlanningPage() {
                 onChange={(e) => setOnlyHz(e.target.checked)}
                 className="rounded border-surface-border text-gold focus:ring-0 cursor-pointer"
               />
-              <span>🌿 Filter Habitable Zone Planets Only</span>
+              <span>Filter Habitable Zone Planets Only</span>
             </label>
           </div>
 
@@ -369,7 +360,6 @@ export default function JwstObservatoryPlanningPage() {
           {/* Header */}
           <div>
             <div className="flex items-center gap-2.5 mb-1">
-              <span className="text-xl leading-none">🧬</span>
               <h2 className="text-xl font-bold text-text tracking-wide">
                 Simulated JWST Transit Absorption Spectrum
               </h2>
@@ -518,17 +508,17 @@ export default function JwstObservatoryPlanningPage() {
               {selectedSimPlanet.tsm < 10 ? (
                 <div className="p-4 rounded-xl bg-[#2a230c] border border-amber-500/40 text-[#fcd34d] text-xs font-semibold flex items-center gap-3">
                   <span className="w-3.5 h-3.5 rounded-full bg-red-500 flex-shrink-0 animate-pulse"></span>
-                  <span>🔴 Challenging target — requires stacking many transits</span>
+                  <span>Challenging target — requires stacking many transits</span>
                 </div>
               ) : selectedSimPlanet.tsm >= 90 ? (
                 <div className="p-4 rounded-xl bg-status-success/15 border border-status-success/40 text-status-success text-xs font-semibold flex items-center gap-3">
                   <span className="w-3.5 h-3.5 rounded-full bg-status-success flex-shrink-0 animate-pulse"></span>
-                  <span>🟢 High Signal Target — single transit detection feasible!</span>
+                  <span>High Signal Target — single transit detection feasible!</span>
                 </div>
               ) : (
                 <div className="p-4 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs font-semibold flex items-center gap-3">
                   <span className="w-3.5 h-3.5 rounded-full bg-amber-400 flex-shrink-0"></span>
-                  <span>🟡 Moderate Target — 5 to 10 transits required for detection</span>
+                  <span>Moderate Target — 5 to 10 transits required for detection</span>
                 </div>
               )}
             </div>
@@ -538,25 +528,20 @@ export default function JwstObservatoryPlanningPage() {
               {/* Card 1: Detectable Biosignatures */}
               <div className="glass-card p-5 rounded-2xl border border-surface-border/60 bg-[#090d16] space-y-3">
                 <div className="flex items-center gap-2 text-text font-bold text-xs">
-                  <span className="text-sm">🧬</span>
                   <span>Detectable Biosignatures:</span>
                 </div>
 
                 <ul className="space-y-2.5 text-xs text-text">
                   <li className="flex items-center gap-2">
-                    <span>💧</span>
                     <span><strong className="font-mono font-bold">H₂O (1.4 µm, 6.3 µm)</strong> — Water vapor</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <span>🌿</span>
                     <span><strong className="font-mono font-bold">O₃ (9.6 µm)</strong> — Ozone (photosynthesis byproduct)</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <span>🔥</span>
                     <span><strong className="font-mono font-bold">CH₄ (3.3 µm)</strong> — Methane (biological/geological)</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <span>🫧</span>
                     <span><strong className="font-mono font-bold">CO₂ (4.3 µm)</strong> — Carbon dioxide</span>
                   </li>
                 </ul>
@@ -579,7 +564,6 @@ export default function JwstObservatoryPlanningPage() {
         <div className="space-y-6 animate-fade-in">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg leading-none">🇮🇳</span>
               <h2 className="text-lg font-bold text-text tracking-wide">
                 Indian Ground-Based Observatory Visibility & Transit Planning
               </h2>
@@ -594,11 +578,10 @@ export default function JwstObservatoryPlanningPage() {
               <div key={idx} className="glass-card p-5 space-y-3.5 border border-surface-border/60 hover:border-gold/30 transition-all">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl leading-none">{obs.icon}</span>
+                    <MapPin className="w-5 h-5 text-gold flex-shrink-0" />
                     <div>
                       <h4 className="text-sm font-bold text-text">{obs.name}</h4>
                       <p className="text-[11px] text-text-muted flex items-center gap-1 mt-0.5">
-                        <MapPin className="w-3 h-3 text-gold" />
                         <span>{obs.location} ({obs.coords})</span>
                       </p>
                     </div>
