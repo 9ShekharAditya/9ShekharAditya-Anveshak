@@ -21,31 +21,62 @@ An interactive astrophysics and data science web application built with **Stream
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start Guide
 
-### 1. Clone or Navigate to the Repository
+### Option 1: Full-Stack App (React + Three.js WebGL + FastAPI + Docker) — *Recommended*
+
+#### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Running)
+- [Git](https://git-scm.com/)
+
+#### Steps
 ```bash
+# 1. Clone the repository
 git clone https://github.com/YOUR_USERNAME/exoplanet-dashboard.git
 cd exoplanet-dashboard
+
+# 2. Navigate to the full-stack app directory
+cd "Frontend /Anveshak_punit"
+
+# 3. Create environment file from template
+cp .env.example .env
+
+# 4. Start all services with Docker Compose
+docker compose up --build
 ```
 
-### 2. Create and Activate a Virtual Environment
+#### Access Points:
+- **Frontend Dashboard & 3D Visualizer**: [http://localhost:5173](http://localhost:5173)
+- **FastAPI Science Backend API**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **API Health Check**: [http://localhost:8000/api/health](http://localhost:8000/api/health)
+
+---
+
+### Option 2: Streamlit Scientific App (Python)
+
+#### Prerequisites
+- Python 3.9+
+- pip
+
+#### Steps
 ```bash
+# 1. Clone the repository
+git clone https://github.com/YOUR_USERNAME/exoplanet-dashboard.git
+cd exoplanet-dashboard
+
+# 2. Create and activate a Python virtual environment
 python3 -m venv venv
-source venv/bin/activate
-```
+source venv/bin/activate   # On Windows: venv\Scripts\activate
 
-### 3. Install Dependencies
-```bash
+# 3. Install Python dependencies
 pip install -r requirements.txt pyarrow
-```
 
-### 4. Run the Dashboard
-```bash
+# 4. Run the Streamlit Dashboard
 streamlit run app.py
 ```
 
-Open `http://localhost:8501` in your browser.
+#### Access Point:
+- **Streamlit Web App**: [http://localhost:8501](http://localhost:8501)
 
 ---
 
