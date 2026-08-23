@@ -10,7 +10,7 @@ const sidebarNavItems = [
   { path: '/', icon: LayoutGrid, label: 'Dashboard' },
   { path: '/candidates', icon: Globe, label: 'Exoplanet Analysis' },
   { path: '/system-3d', icon: Orbit, label: '3D System Viewer' },
-  { path: '/research', icon: FlaskConical, label: 'Research' },
+  { path: '/research', icon: FlaskConical, label: 'Research', isUpcoming: true },
   { path: '/transmission-spectrum', icon: Globe, label: 'Transmission Spectrum' },
   { path: '/jwst-planning', icon: Satellite, label: 'JWST & Observatory Planning' },
 ];
@@ -55,7 +55,14 @@ export default function Layout() {
                   className={`nav-link ${isActive ? 'active' : ''}`}
                 >
                   <Icon className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-[14px] leading-snug">{item.label}</span>
+                  <span className="text-[14px] leading-snug flex items-center gap-1.5">
+                    <span>{item.label}</span>
+                    {item.isUpcoming && (
+                      <span className="text-[12px] font-normal text-text-muted">
+                        (<span className="text-red-500 font-bold">upcoming</span>)
+                      </span>
+                    )}
+                  </span>
                 </NavLink>
               );
             })}
