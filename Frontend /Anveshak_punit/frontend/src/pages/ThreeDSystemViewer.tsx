@@ -343,7 +343,7 @@ export default function ThreeDSystemViewer() {
 
   // Search & Filtering Controls
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('🏆 Top Habitable Systems');
+  const [categoryFilter, setCategoryFilter] = useState<string>('Top Habitable Systems');
   const [selectedHostName, setSelectedHostName] = useState<string>('TRAPPIST-1');
   const [highlightPlanetName, setHighlightPlanetName] = useState<string>('(None / Show All)');
   const [activeTelemetryPlanetName, setActiveTelemetryPlanetName] = useState<string>('');
@@ -394,7 +394,7 @@ export default function ThreeDSystemViewer() {
     const allHosts = Array.from(systemMap.keys());
     let filtered = allHosts;
 
-    if (categoryFilter === '🏆 Top Habitable Systems') {
+    if (categoryFilter === 'Top Habitable Systems') {
       const topHosts = new Set<string>();
       const sortedCandidates = [...candidates].sort((a, b) => (b.score || 0) - (a.score || 0));
       for (const c of sortedCandidates) {
@@ -404,7 +404,7 @@ export default function ThreeDSystemViewer() {
         }
       }
       filtered = Array.from(topHosts);
-    } else if (categoryFilter === '🪐 Multi-Planet Systems') {
+    } else if (categoryFilter === 'Multi-Planet Systems') {
       filtered = allHosts.filter((host) => {
         const list = systemMap.get(host);
         return list && list.length >= 2;
@@ -845,7 +845,6 @@ export default function ThreeDSystemViewer() {
       {/* ── System Selector Card ── */}
       <div className="glass-card p-5 space-y-4">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-xl">🔭</span>
           <h2 className="text-base font-bold text-text tracking-wide">Select Planetary System</h2>
         </div>
 
@@ -853,7 +852,7 @@ export default function ThreeDSystemViewer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-3">
             <label className="text-xs text-text-muted block mb-1.5 font-medium">
-              🔍 Search by Star or Planet Name (e.g. Kepler-452, TOI-700, TRAPPIST-1, 10007916)
+              Search by Star or Planet Name (e.g. Kepler-452, TOI-700, TRAPPIST-1, 10007916)
             </label>
             <div className="relative">
               <input
@@ -881,9 +880,9 @@ export default function ThreeDSystemViewer() {
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="w-full px-3 py-2 text-sm bg-surface border border-surface-border rounded-xl text-text focus:outline-none focus:border-gold/50 cursor-pointer"
             >
-              <option value="🏆 Top Habitable Systems">🏆 Top Habitable Systems</option>
-              <option value="🪐 Multi-Planet Systems">🪐 Multi-Planet Systems</option>
-              <option value="🌌 All Systems (Search)">🌌 All Systems (Search)</option>
+              <option value="Top Habitable Systems">Top Habitable Systems</option>
+              <option value="Multi-Planet Systems">Multi-Planet Systems</option>
+              <option value="All Systems (Search)">All Systems (Search)</option>
             </select>
           </div>
         </div>
@@ -917,7 +916,7 @@ export default function ThreeDSystemViewer() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-1">
           <div className="flex-1 max-w-md">
             <label className="text-xs text-text-muted block mb-1.5 font-medium">
-              🎯 Highlight Planet in 3D Model:
+              Highlight Planet in 3D Model:
             </label>
             <select
               value={highlightPlanetName}
@@ -940,7 +939,7 @@ export default function ThreeDSystemViewer() {
 
           <div>
             <label className="text-xs text-text-muted block mb-1.5 font-medium">
-              📐 Camera View Presets:
+              Camera View Presets:
             </label>
             <div className="flex items-center gap-2">
               <button
@@ -972,7 +971,6 @@ export default function ThreeDSystemViewer() {
       {/* ── Real-time WebGL Simulation ───────────────────────────── */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <span className="text-base">🚀</span>
           <h3 className="text-sm font-bold text-text uppercase tracking-wide">
             Real-time WebGL Simulation (Drag to Orbit, Scroll to Zoom)
           </h3>
@@ -1016,7 +1014,7 @@ export default function ThreeDSystemViewer() {
               {isPaused ? <Play className="w-4 h-4 fill-current" /> : <Pause className="w-4 h-4 fill-current" />}
             </button>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gold font-bold font-mono">⚪ Orbit Speed</span>
+              <span className="text-xs text-gold font-bold font-mono">Orbit Speed</span>
               <input
                 type="range"
                 min="0"
@@ -1041,11 +1039,11 @@ export default function ThreeDSystemViewer() {
 
       {/* ── 3D Model Legend Bar ── */}
       <div className="p-3.5 rounded-xl bg-[#0d1222]/80 border border-surface-border text-xs flex items-center gap-6 flex-wrap font-medium">
-        <span className="text-text font-bold">🗺️ 3D Model Legend:</span>
-        <span className="text-[#ffd32a]">⭐ Central Glowing Sun</span>
-        <span className="text-[#2ed573]">🌿 Green Disc = Conservative Habitable Zone (Liquid Water)</span>
-        <span className="text-[#00d2d3]">🔵 Cyan Disc = Optimistic Habitable Zone</span>
-        <span className="text-[#ff4757]">🎯 Red Reticle = Highlighted Planet</span>
+        <span className="text-text font-bold">3D Model Legend:</span>
+        <span className="text-[#ffd32a]">Central Glowing Sun</span>
+        <span className="text-[#2ed573]">Green Disc = Conservative Habitable Zone (Liquid Water)</span>
+        <span className="text-[#00d2d3]">Cyan Disc = Optimistic Habitable Zone</span>
+        <span className="text-[#ff4757]">Red Reticle = Highlighted Planet</span>
       </div>
 
       {/* ── Astrobiology & Planetary Science Inferences Deck ─────── */}
@@ -1055,7 +1053,7 @@ export default function ThreeDSystemViewer() {
             <div className="flex items-center gap-2">
               <Award className="w-5 h-5 text-gold" />
               <h3 className="text-lg font-bold text-text tracking-wide">
-                🔬 Astrobiology & Planetary Science Inferences
+                Astrobiology & Planetary Science Inferences
               </h3>
             </div>
             <p className="text-xs text-text-muted mt-0.5">
@@ -1071,7 +1069,7 @@ export default function ThreeDSystemViewer() {
                   3D Climate Globe: {activeTelemetryPlanet.name}
                 </h4>
                 <p className="text-xs font-medium text-gold mt-0.5">
-                  🪐 {activeTelemetryPlanet.climate}
+                  {activeTelemetryPlanet.climate}
                 </p>
               </div>
               <AnimatedClimateGlobe planet={activeTelemetryPlanet} />
@@ -1092,13 +1090,13 @@ export default function ThreeDSystemViewer() {
                     ? 'bg-status-success/10 text-status-success border-status-success/30'
                     : 'bg-gold/10 text-gold border-gold/30'
                 }`}>
-                  {activeTelemetryPlanet.status === 'CONFIRMED' ? '✅ CONFIRMED PLANET' : '🛰️ CANDIDATE'}
+                  {activeTelemetryPlanet.status === 'CONFIRMED' ? 'CONFIRMED PLANET' : 'CANDIDATE'}
                 </span>
               </div>
 
               {activeTelemetryPlanet.inHz ? (
                 <div className="flex items-center gap-2 p-3 rounded-xl bg-status-success/10 border border-status-success/30 text-status-success text-sm font-semibold">
-                  <span>🌿 Inside Conservative Habitable Zone (Liquid Surface Water Feasible)</span>
+                  <span>Inside Conservative Habitable Zone (Liquid Surface Water Feasible)</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2 p-3 rounded-xl bg-[#1e2330] border border-surface-border text-[#f59e0b] text-sm font-semibold">
@@ -1108,7 +1106,7 @@ export default function ThreeDSystemViewer() {
 
               <div className="p-4 rounded-xl bg-[#090e1a]/80 border border-indigo-500/25 space-y-2 text-xs font-mono">
                 <div className="flex items-center gap-2 text-text font-sans font-bold text-sm mb-2">
-                  <span>🪐 Planetary Astrophysics & Atmosphere:</span>
+                  <span>Planetary Astrophysics & Atmosphere:</span>
                 </div>
                 <div className="space-y-1.5 leading-relaxed">
                   <p className="text-text">
@@ -1153,7 +1151,6 @@ export default function ThreeDSystemViewer() {
       {/* ── NASA Eyes on Exoplanets Launch Card ──────────────────── */}
       <div className="glass-card p-6 rounded-2xl border border-indigo-500/30 bg-[#090d1b]/90 shadow-2xl text-center space-y-4">
         <div className="flex items-center justify-center gap-2">
-          <span className="text-2xl">🚀</span>
           <h3 className="text-lg font-bold text-white tracking-wide">
             NASA Eyes on Exoplanets — 3D Universe Explorer
           </h3>
@@ -1166,20 +1163,20 @@ export default function ThreeDSystemViewer() {
             onClick={() => window.open(`https://eyes.nasa.gov/apps/exo/#/star/${encodeURIComponent(activeSystem.name.replace(/\s+/g, '_'))}`, '_blank')}
             className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-blue-500/25 transition-all"
           >
-            <span>🔭 Fly to {activeSystem.name}</span>
+            <span>Fly to {activeSystem.name}</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => window.open('https://eyes.nasa.gov/apps/exo/', '_blank')}
             className="flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-semibold text-xs shadow-lg shadow-teal-500/25 transition-all"
           >
-            <span>🌌 Open Full Universe</span>
+            <span>Open Full Universe</span>
           </button>
           <button
             onClick={() => window.open(`https://exoplanetarchive.ipac.caltech.edu/overview/${encodeURIComponent(activeSystem.name)}`, '_blank')}
             className="flex items-center gap-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-text font-semibold text-xs transition-all"
           >
-            <span>🛰️ NASA Archive Page</span>
+            <span>NASA Archive Page</span>
           </button>
         </div>
       </div>
@@ -1188,7 +1185,7 @@ export default function ThreeDSystemViewer() {
       <div className="glass-card overflow-hidden">
         <div className="px-5 pt-4 pb-3 border-b border-surface-border flex items-center justify-between">
           <h3 className="section-title text-sm font-semibold tracking-wide">
-            📋 SYSTEM PLANETARY TELEMETRY TABLE: {activeSystem.name.toUpperCase()}
+            SYSTEM PLANETARY TELEMETRY TABLE: {activeSystem.name.toUpperCase()}
           </h3>
           <span className="text-xs text-text-muted font-mono">
             {activeSystem.planets.length} Planet{activeSystem.planets.length > 1 ? 's' : ''} in System

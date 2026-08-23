@@ -21,7 +21,7 @@ def show(df, full_df=None):
     )
 
     # ── Mission Overview Metrics ─────────────────────────────────────
-    st.markdown("### 🛰️ Mission Overview")
+    st.markdown("### Mission Overview")
 
     total = len(df)
     in_hz = int(df["in_hz_optimistic"].fillna(False).sum())
@@ -42,7 +42,7 @@ def show(df, full_df=None):
     st.markdown("---")
 
     # ── Top Habitable Candidates ─────────────────────────────────────
-    st.markdown("### 🏆 Most Habitable Candidates (All Datasets Combined)")
+    st.markdown("### Most Habitable Candidates (All Datasets Combined)")
 
     top = df.nlargest(15, "habitability_score")
     display_cols = ["tier_emoji", "name", "source", "radius", "eq_temp",

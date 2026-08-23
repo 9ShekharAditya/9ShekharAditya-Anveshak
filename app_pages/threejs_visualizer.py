@@ -110,7 +110,7 @@ def render_threejs_system(system_planets, host_name, st_teff, st_radius, target_
     <body>
     <div id="tooltip"></div>
     <div id="controls">
-        <label>⏱️ Orbit Speed</label>
+        <label>Orbit Speed</label>
         <input type="range" id="speedSlider" min="0" max="10" step="0.1" value="1">
     </div>
     <div id="three-container" style="width: 100vw; height: 100vh;"></div>
