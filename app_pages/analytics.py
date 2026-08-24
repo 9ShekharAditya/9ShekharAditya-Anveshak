@@ -30,7 +30,7 @@ def show(df):
     st.title("📈 Population Analytics & AI Validation Engine")
     st.caption("Statistical analysis and AI-driven confirmation confidence for the exoplanet candidate population")
 
-    # ── Overview stats ───────────────────────────────────────────────
+    #  Overview stats 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         earth_sized = ((df["radius"] >= 0.8) & (df["radius"] <= 1.25)).sum()
@@ -47,7 +47,7 @@ def show(df):
 
     st.markdown("---")
 
-    # ── Chart Tabs ───────────────────────────────────────────────────
+    # Chart Tabs 
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         "Radius Gap",
         "Period vs Radius",
@@ -193,7 +193,7 @@ def show(df):
         else:
             st.warning("AI confidence scores not available. Re-run the data pipeline.")
 
-    # ── Summary statistics ───────────────────────────────────────────
+    #  Summary statistics 
     st.markdown("---")
     st.subheader("📋 Population Summary Statistics")
 
