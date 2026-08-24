@@ -20,7 +20,7 @@ def render_sidebar_filters(df):
 
     filtered = df.copy()
 
-    # ── Source mission ────────────────────────────────────────────────
+    #  Source mission 
     sources = sorted(df["source"].unique().tolist())
     selected_sources = st.sidebar.multiselect(
         "Mission Source",
@@ -29,7 +29,7 @@ def render_sidebar_filters(df):
     )
     filtered = filtered[filtered["source"].isin(selected_sources)]
 
-    # ── Habitability tier ────────────────────────────────────────────
+    #  Habitability tier 
     tiers = ["High Potential", "Moderate Potential", "Low Potential", "Not Habitable"]
     available_tiers = [t for t in tiers if t in df["habitability_tier"].values]
     selected_tiers = st.sidebar.multiselect(
@@ -39,7 +39,7 @@ def render_sidebar_filters(df):
     )
     filtered = filtered[filtered["habitability_tier"].isin(selected_tiers)]
 
-    # ── Planet radius ────────────────────────────────────────────────
+    # Planet radius 
     radius_valid = df["radius"].dropna()
     if len(radius_valid) > 0:
         r_min = float(radius_valid.min())
@@ -57,7 +57,7 @@ def render_sidebar_filters(df):
             filtered["radius"].isna()
         ]
 
-    # ── Orbital period ───────────────────────────────────────────────
+    # Orbital period 
     period_valid = df["period"].dropna()
     if len(period_valid) > 0:
         p_min = float(period_valid.min())
@@ -75,7 +75,7 @@ def render_sidebar_filters(df):
             filtered["period"].isna()
         ]
 
-    # ── Equilibrium temperature ──────────────────────────────────────
+    #  Equilibrium temperature 
     temp_valid = df["eq_temp"].dropna()
     if len(temp_valid) > 0:
         t_min = float(temp_valid.min())
@@ -93,13 +93,13 @@ def render_sidebar_filters(df):
             filtered["eq_temp"].isna()
         ]
 
-    # ── Tidal lock status ────────────────────────────────────────────
+    #  Tidal lock status 
     tidal_options = ["All", "Likely Synchronous (Locked)", "Possibly Locked", "Unlikely Locked"]
     tidal_choice = st.sidebar.selectbox("Tidal Lock Status", tidal_options)
     if tidal_choice != "All":
         filtered = filtered[filtered["tidal_lock"] == tidal_choice]
 
-    # ── In habitable zone only ───────────────────────────────────────
+    #  In habitable zone only 
     hz_only = st.sidebar.checkbox("Show only HZ candidates", value=False)
     if hz_only:
         filtered = filtered[filtered["in_hz_optimistic"].fillna(False)]

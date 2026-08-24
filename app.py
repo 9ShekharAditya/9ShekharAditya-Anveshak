@@ -40,7 +40,7 @@ def main():
         st.error(f"Error: {e}")
         return
 
-    # ── READ & MANAGE QUERY PARAMETERS ────────────────────────────────
+    #  READ & MANAGE QUERY PARAMETERS 
     query_params = st.query_params
     active_page = query_params.get("page", "Dashboard")
     dataset_choice = query_params.get("dataset", "All Datasets")
@@ -52,7 +52,7 @@ def main():
         st.query_params.update(page=active_page, dataset=dataset_choice)
         st.rerun()
 
-    # ── CUSTOM HTML TOP NAVBAR ────────────────────────────────────────
+    #  CUSTOM HTML TOP NAVBAR 
     navbar_html = f"""
     <div class="custom-navbar">
         <div class="nav-brand">ANVESHAK</div>
@@ -87,7 +87,7 @@ def main():
     """
     st.markdown(navbar_html, unsafe_allow_html=True)
 
-    # ── FILTER DATA BY SOURCE ─────────────────────────────────────────
+    #  FILTER DATA BY SOURCE 
     source_map = {
         "Kepler": "Kepler",
         "TESS": "TESS",
@@ -99,7 +99,7 @@ def main():
     else:
         df = full_df.copy()
 
-    # ── RENDER PAGES ──────────────────────────────────────────────────
+    #  RENDER PAGES 
     if active_page == "Dashboard":
         dashboard.show(df, full_df)
     elif active_page == "Exoplanets":

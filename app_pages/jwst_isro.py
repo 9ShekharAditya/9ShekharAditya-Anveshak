@@ -28,7 +28,7 @@ def show(df):
         "and target visibility from Indian ground-based observatories"
     )
 
-    # ── Score JWST feasibility ───────────────────────────────────────
+    #  Score JWST feasibility 
     with st.spinner("Computing JWST spectroscopy metrics (TSM/ESM)..."):
         scored = score_jwst_feasibility(df)
 
@@ -38,7 +38,7 @@ def show(df):
         "Indian Observatory Visibility",
     ])
 
-    # ── Tab 1: JWST Priority Ranking ─────────────────────────────────
+    # Tab 1: JWST Priority Ranking 
     with tab1:
         st.subheader("JWST Follow-Up Target Priority (Kempton et al. 2018)")
         st.markdown(
@@ -96,7 +96,7 @@ def show(df):
         else:
             st.info("No candidates with computable TSM in current selection.")
 
-    # ── Tab 2: Biosignature Spectrum Simulator ───────────────────────
+    # Tab 2: Biosignature Spectrum Simulator 
     with tab2:
         st.subheader("Simulated JWST Transit Absorption Spectrum")
         st.markdown(
@@ -150,7 +150,7 @@ def show(df):
         else:
             st.warning("No candidates available for spectral simulation.")
 
-    # ── Tab 3: Indian Observatory Visibility ─────────────────────────
+    #  Tab 3: Indian Observatory Visibility 
     with tab3:
         st.subheader("Indian Observatory Visibility Assessment")
         st.markdown(

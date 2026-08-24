@@ -20,7 +20,7 @@ def show(df, full_df=None):
         "Earth Similarity Index (ESI) — [All Datasets Combined]"
     )
 
-    # ── Mission Overview Metrics ─────────────────────────────────────
+    #Mission Overview Metrics
     st.markdown("### Mission Overview")
 
     total = len(df)
@@ -41,7 +41,7 @@ def show(df, full_df=None):
 
     st.markdown("---")
 
-    # ── Top Habitable Candidates ─────────────────────────────────────
+    # Top Habitable Candidates 
     st.markdown("### Most Habitable Candidates (All Datasets Combined)")
 
     top = df.nlargest(15, "habitability_score")
@@ -75,7 +75,7 @@ def show(df, full_df=None):
 
     st.markdown("---")
 
-    # ── Charts ───────────────────────────────────────────────────────
+    # Charts 
     st.markdown("### 📈 Population Distribution")
     c1, c2 = st.columns(2)
     with c1:

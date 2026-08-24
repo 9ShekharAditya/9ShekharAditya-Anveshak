@@ -59,7 +59,7 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
     max_sma = max(smas) if smas else 1.0
     bound = max_sma * 1.35
 
-    # ── 1. HABITABLE ZONE (Discs & Boundaries) ────────────────────────
+    # 1. HABITABLE ZONE (Discs & Boundaries) 
     hz_outer_display = 0.1
     if st_teff and st_radius and not np.isnan(st_teff) and not np.isnan(st_radius):
         hz = compute_hz_distances(np.array([st_teff]), np.array([st_radius]))
@@ -144,7 +144,7 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
         zs = radius * np.cos(THETA_MESH) + z_center
         return xs, ys, zs
 
-    # ── 2. HOST STAR (Glowing 3D Surface Sphere) ──────────────────────
+    #  2. HOST STAR (Glowing 3D Surface Sphere) 
     star_color, star_type, star_glow = _get_star_color_and_type(st_teff)
     star_disp_rad = max(0.025 * bound, min(0.06 * bound, (st_radius or 1.0) * 0.035 * bound))
     
@@ -183,7 +183,7 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
         hoverinfo="text",
     ))
 
-    # ── 3. PLANETS & ORBIT PATHS ─────────────────────────────────────
+    #  3. PLANETS & ORBIT PATHS 
     palette = ["#5b9bf5", "#ffb74d", "#b388ff", "#3ddc84", "#ff5252", "#00cec9"]
 
     for i, (_, planet) in enumerate(system_planets.iterrows()):
@@ -295,7 +295,7 @@ def _build_interactive_system_3d(system_planets, host_name, st_teff, st_radius, 
                 showlegend=False,
             ))
 
-    # ── 4. SCENE BOUNDARIES & CAMERA ─────────────────────────────────
+    #  4. SCENE BOUNDARIES & CAMERA 
     fig.update_layout(
         template="plotly_dark",
         paper_bgcolor="#000000",
@@ -404,7 +404,7 @@ def show(df):
 
     hosts = valid["host_name"].dropna().unique().tolist()
 
-    # ── System Selection ─────────────────────────────────────────────
+    #  System Selection 
     st.markdown("### Select Planetary System")
     col1, col2 = st.columns([3, 1])
 
@@ -453,7 +453,7 @@ def show(df):
     st_radius = first.get("st_radius", 1.0)
     planet_names = system_planets["name"].dropna().tolist()
 
-    # ── Focused Planet Target Selection ──────────────────────────────
+    # Focused Planet Target Selection 
     col_p1, col_p2 = st.columns([2, 2])
     with col_p1:
         focused_planet = st.selectbox(
@@ -471,12 +471,12 @@ def show(df):
             cam_edge = st.button("Edge-On (Transit)")
 
     target_planet = None if focused_planet == "(None / Show All)" else focused_planet
-    # ── 3D WebGL Visualizer (Three.js) ────────────────────────────────────────────────
+    #  3D WebGL Visualizer (Three.js) 
     st.markdown("##### Real-time WebGL Simulation (Drag to Orbit, Scroll to Zoom)")
     from app_pages.threejs_visualizer import render_threejs_system
     render_threejs_system(system_planets, selected_host, st_teff, st_radius, target_planet)
 
-    # ── Legend / Explanation Bar ─────────────────────────────────────
+    #  Legend / Explanation Bar 
     st.markdown(
         """
         <div style="background: rgba(20, 20, 50, 0.7); border: 1px solid rgba(100, 100, 255, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
@@ -490,7 +490,7 @@ def show(df):
         unsafe_allow_html=True
     )
 
-    # ── Astrobiologist & Researcher Scientific Inference Deck ─────
+    #  Astrobiologist & Researcher Scientific Inference Deck 
     st.markdown("---")
     st.subheader("Astrobiology & Planetary Science Inferences")
     st.caption("Deep physical modeling for astrobiological assessment and atmospheric characterization feasibility:")
@@ -529,7 +529,7 @@ def show(df):
         </div>
         """, unsafe_allow_html=True)
 
-    # ── NASA Eyes on Exoplanets — Direct Launch ─────────────────────────
+    #  NASA Eyes on Exoplanets — Direct Launch 
     st.markdown("---")
     st.subheader("NASA Eyes on Exoplanets — 3D Universe Explorer")
     st.caption("NASA Eyes blocks iframe embedding for security. Use the buttons below to launch it directly in a new tab:")
@@ -588,7 +588,7 @@ def show(df):
         height=240,
     )
 
-    # ── System Table ─────────────────────────────────────────────────
+    #  System Table 
     st.markdown("---")
     st.subheader("📋 System Planetary Telemetry Table")
     display_cols = ["name", "source", "disposition", "radius", "period", "semi_major_axis", "eccentricity",

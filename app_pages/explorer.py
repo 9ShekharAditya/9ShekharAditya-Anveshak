@@ -36,7 +36,7 @@ def show(df):
 
     sorted_df = filtered.sort_values(sort_by, ascending=ascending, na_position="last")
 
-    # ── Interactive Table ─────────────────────────────────────────────
+    # Interactive Table 
     display_cols = ["tier_emoji", "name", "source", "disposition", "size_class", "radius",
                     "period", "eq_temp", "insol", "esi", "habitability_score",
                     "ai_confidence_pct", "atm_retention", "tidal_lock"]
@@ -68,7 +68,7 @@ def show(df):
         },
     )
 
-    # ── Single Candidate Astrobiological Inspection ──────────────────
+    #  Single Candidate Astrobiological Inspection 
     st.markdown("---")
     st.subheader("🔍 Individual Target In-Depth Telemetry")
 
@@ -79,7 +79,7 @@ def show(df):
             row = sorted_df[sorted_df["name"] == selected].iloc[0]
             planet_detail_card(row)
 
-    # ── Export ────────────────────────────────────────────────────────
+    #  Export 
     st.markdown("---")
     csv = filtered.to_csv(index=False)
     st.download_button(

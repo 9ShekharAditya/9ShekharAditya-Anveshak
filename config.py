@@ -7,14 +7,14 @@ we put them all here. If NASA changes their URL or a scientific
 paper updates a coefficient, you change ONE file.
 """
 
-# ─── NASA Exoplanet Archive TAP API ───────────────────────────────────
+#  NASA Exoplanet Archive TAP API 
 TAP_URL = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
 
 # Cache settings
 CACHE_DIR = "data/cache"
 CACHE_TTL_HOURS = 24  # re-fetch data if cache is older than this
 
-# ─── Habitable Zone Coefficients (Kopparapu et al. 2013) ─────────────
+# Habitable Zone Coefficients (Kopparapu et al. 2013) 
 # Each boundary has: S_eff_sun, a, b, c, d
 # Formula: S_eff = S_eff_sun + a*Tc + b*Tc^2 + c*Tc^3 + d*Tc^4
 # where Tc = T_eff_star - 5780

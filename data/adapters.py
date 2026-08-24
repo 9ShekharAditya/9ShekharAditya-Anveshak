@@ -72,7 +72,7 @@ class BaseTelescopeAdapter(ABC):
         return std_df
 
 
-# ─── Concrete Telescope Adapters ─────────────────────────────────────
+#  Concrete Telescope Adapters 
 
 class KeplerAdapter(BaseTelescopeAdapter):
     mission_name = "Kepler"
@@ -206,7 +206,7 @@ class ConfirmedPlanetsAdapter(BaseTelescopeAdapter):
         })
 
 
-# ─── Future Space Telescope Adapter Template ─────────────────────────
+#  Future Space Telescope Adapter Template 
 class FutureMissionAdapterTemplate(BaseTelescopeAdapter):
     """
     Template for adding upcoming missions (e.g. ESA PLATO, NASA Nancy Grace Roman, Ariel).

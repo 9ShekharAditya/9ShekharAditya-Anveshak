@@ -103,7 +103,7 @@ def score_habitability(df):
     """
     df = df.copy()
 
-    # ── 1. Habitable Zone Boundaries ─────────────────────────────────
+    #  1. Habitable Zone Boundaries 
     has_star = df["st_teff"].notna() & df["st_radius"].notna()
     for col in ["hz_inner_con", "hz_inner_opt", "hz_outer_con", "hz_outer_opt"]:
         df[col] = np.nan
@@ -117,7 +117,7 @@ def score_habitability(df):
         df.loc[has_star, "hz_outer_con"] = hz["outer_con"]
         df.loc[has_star, "hz_outer_opt"] = hz["outer_opt"]
 
-    # ── 2. Habitable Zone Flags & Position ───────────────────────────
+    #  2. Habitable Zone Flags & Position 
     sma = df["semi_major_axis"]
     df["in_hz_conservative"] = (sma >= df["hz_inner_con"]) & (sma <= df["hz_outer_con"])
     df["in_hz_optimistic"] = (sma >= df["hz_inner_opt"]) & (sma <= df["hz_outer_opt"])
@@ -127,7 +127,7 @@ def score_habitability(df):
     df["hz_score"] = np.clip(1.0 - (np.abs(sma - hz_center) / (hz_width / 2.0)), 0.0, 1.0)
     df.loc[~df["in_hz_optimistic"].fillna(False), "hz_score"] = 0.0
 
-    # ── 3. Size & Mass Modeling ──────────────────────────────────────
+    #  3. Size & Mass Modeling 
     r = df["radius"]
     df["estimated_mass"] = np.where(
         df["mass"].notna(),
@@ -144,7 +144,7 @@ def score_habitability(df):
         )
     )
 
-    # ── 4. Equilibrium Temperature Score ─────────────────────────────
+    #  4. Equilibrium Temperature Score 
     t = df["eq_temp"]
     t_lo, t_hi = TEMP_OPTIMAL
     t_mid = (t_lo + t_hi) / 2.0
@@ -154,7 +154,7 @@ def score_habitability(df):
         np.clip(np.exp(-0.5 * (((t - t_mid) / t_range) ** 2)), 0.0, 1.0)
     )
 
-    # ── 5. Astrobiology Inferences: Tidal Locking & UV Flaring ──────
+    #  5. Astrobiology Inferences: Tidal Locking & UV Flaring 
     is_mdwarf = df["st_teff"] < MDWARF_TEFF_THRESHOLD
     df["tidal_lock"] = "Unlikely Locked"
     df.loc[is_mdwarf & (sma < 0.15), "tidal_lock"] = "Likely Synchronous (Locked)"
@@ -171,7 +171,7 @@ def score_habitability(df):
         np.where(is_mdwarf, "Moderate", "Low (Stable Star)")
     )
 
-    # ── 6. Atmospheric Retention Index (Jeans Escape Proxy) ──────────
+    #  6. Atmospheric Retention Index (Jeans Escape Proxy) 
     # Escape velocity vs Thermal thermal velocity ratio: v_esc / sqrt(T_eq)
     m = df["estimated_mass"].fillna(1.0)
     r_safe = df["radius"].fillna(1.0)
@@ -182,7 +182,7 @@ def score_habitability(df):
         np.where(v_esc >= 6.0, "Moderate (Secondary Atmosphere)", "Weak (Atmospheric Stripping Risk)")
     )
 
-    # ── 7. Earth Similarity Index (ESI) ──────────────────────────────
+    #  7. Earth Similarity Index (ESI) 
     has_esi = df["radius"].notna() & df["eq_temp"].notna()
     df["esi"] = 0.0
     if has_esi.any():
@@ -192,12 +192,12 @@ def score_habitability(df):
             df.loc[has_esi, "estimated_mass"].values,
         )
 
-    # ── 8. Size Classification ───────────────────────────────────────
+    # 8. Size Classification 
     df["size_class"] = "Unknown"
     if df["radius"].notna().any():
         df.loc[df["radius"].notna(), "size_class"] = classify_size(df.loc[df["radius"].notna(), "radius"].values)
 
-    # ── 9. Composite Habitability Score ──────────────────────────────
+    #  9. Composite Habitability Score 
     w = HABIT_WEIGHTS
     df["habitability_score"] = (
         w["hz_position"] * df["hz_score"]

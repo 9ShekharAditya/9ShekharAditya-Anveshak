@@ -1,8 +1,7 @@
-/* ═══════════════════════════════════════════════════════════════════
-   EXOPLANET DASHBOARD — PREMIUM DARK + GOLD MISSION CONTROL THEME
-   ═══════════════════════════════════════════════════════════════════ */
+/*
+   EXOPLANET DASHBOARD — PREMIUM DARK + GOLD MISSION CONTROL THEME */
 
-/* ── ROOT VARIABLES ───────────────────────────────────────────────── */
+/* ROOT VARIABLES  */
 :root {
     --bg-primary: #080810;
     --bg-secondary: #0c0c1a;
@@ -23,7 +22,7 @@
     --amber: #ffb74d;
 }
 
-/* ── GLOBAL APP BACKGROUND ────────────────────────────────────────── */
+/* GLOBAL APP BACKGROUND  */
 [data-testid="stAppViewContainer"],
 [data-testid="stAppViewContainer"] > div,
 .main .block-container {
@@ -41,7 +40,7 @@ html, body, [data-testid="stApp"] {
     background-color: var(--bg-primary) !important;
 }
 
-/* ── SIDEBAR ──────────────────────────────────────────────────────── */
+/*  SIDEBAR  */
 [data-testid="stSidebar"] {
     background: var(--bg-secondary) !important;
     border-right: 1px solid var(--border-subtle) !important;
@@ -76,7 +75,7 @@ html, body, [data-testid="stApp"] {
     border-radius: 8px;
 }
 
-/* ── TYPOGRAPHY ───────────────────────────────────────────────────── */
+/*  TYPOGRAPHY */
 h1 {
     color: var(--gold) !important;
     font-weight: 700 !important;
@@ -108,7 +107,7 @@ p, span, li, td, th, label, div {
     color: var(--text-muted) !important;
 }
 
-/* ── METRIC CARDS ─────────────────────────────────────────────────── */
+/* METRIC CARDS */
 [data-testid="stMetric"] {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-subtle) !important;
@@ -141,7 +140,7 @@ p, span, li, td, th, label, div {
     font-weight: 700 !important;
 }
 
-/* ── DATA TABLES ──────────────────────────────────────────────────── */
+/*  DATA TABLES */
 [data-testid="stDataFrame"] {
     border: 1px solid var(--border-subtle) !important;
     border-radius: 8px !important;
@@ -163,7 +162,7 @@ p, span, li, td, th, label, div {
     font-size: 0.85rem !important;
 }
 
-/* ── TABS ─────────────────────────────────────────────────────────── */
+/* TABS  */
 [data-testid="stTab"] {
     color: var(--text-secondary) !important;
     border-bottom: 2px solid transparent !important;
@@ -179,7 +178,7 @@ p, span, li, td, th, label, div {
     border-bottom-color: var(--gold) !important;
 }
 
-/* ── BUTTONS ──────────────────────────────────────────────────────── */
+/* BUTTONS */
 [data-testid="stButton"] button {
     background: var(--bg-card) !important;
     color: var(--gold) !important;
@@ -203,7 +202,7 @@ p, span, li, td, th, label, div {
     border-radius: 6px !important;
 }
 
-/* ── SELECT BOXES & INPUTS ────────────────────────────────────────── */
+/* SELECT BOXES & INPUTS  */
 [data-testid="stSelectbox"] > div > div {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-subtle) !important;
@@ -223,19 +222,19 @@ p, span, li, td, th, label, div {
     box-shadow: 0 0 0 1px var(--gold-dim) !important;
 }
 
-/* ── SLIDERS ──────────────────────────────────────────────────────── */
+/*  SLIDERS */
 [data-testid="stSlider"] [role="slider"] {
     background-color: var(--gold) !important;
 }
 
-/* ── MULTISELECT ──────────────────────────────────────────────────── */
+/* MULTISELECT  */
 [data-testid="stMultiSelect"] > div > div {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-subtle) !important;
     color: var(--text-primary) !important;
 }
 
-/* ── ALERTS (info, success, warning, error) ────────────────────────── */
+/* ALERTS (info, success, warning, error) */
 [data-testid="stAlert"] {
     border-radius: 8px !important;
 }
@@ -254,13 +253,13 @@ div[role="alert"].st-success,
     border: 1px solid rgba(61, 220, 132, 0.25) !important;
 }
 
-/* ── DIVIDER / HR ─────────────────────────────────────────────────── */
+/* DIVIDER / HR  */
 hr, [data-testid="stMarkdown"] hr {
     border-color: var(--border-subtle) !important;
     opacity: 0.5;
 }
 
-/* ── PLOTLY CHARTS ────────────────────────────────────────────────── */
+/*  PLOTLY CHARTS  */
 .js-plotly-plot .plotly .main-svg {
     background: transparent !important;
 }
@@ -271,34 +270,34 @@ hr, [data-testid="stMarkdown"] hr {
     overflow: hidden;
 }
 
-/* ── EXPANDER ─────────────────────────────────────────────────────── */
+/*  EXPANDER */
 [data-testid="stExpander"] {
     background: var(--bg-card) !important;
     border: 1px solid var(--border-subtle) !important;
     border-radius: 8px !important;
 }
 
-/* ── RADIO BUTTONS ────────────────────────────────────────────────── */
+/* RADIO BUTTONS */
 [data-testid="stRadio"] label {
     color: var(--text-secondary) !important;
 }
 
-/* ── CHECKBOX ─────────────────────────────────────────────────────── */
+/* CHECKBOX  */
 [data-testid="stCheckbox"] label span {
     color: var(--text-secondary) !important;
 }
 
-/* ── PROGRESS BARS (in tables) ────────────────────────────────────── */
+/*  PROGRESS BARS (in tables) */
 [data-testid="stDataFrame"] [role="progressbar"] > div {
     background: linear-gradient(90deg, var(--gold-dim), var(--gold)) !important;
 }
 
-/* ── SPINNER ──────────────────────────────────────────────────────── */
+/*  SPINNER  */
 [data-testid="stSpinner"] {
     color: var(--gold) !important;
 }
 
-/* ── SCROLLBAR ────────────────────────────────────────────────────── */
+/* SCROLLBAR */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -317,7 +316,7 @@ hr, [data-testid="stMarkdown"] hr {
     background: var(--gold-dim);
 }
 
-/* ── HIDE STREAMLIT BRANDING & SIDEBAR ────────────────────────────── */
+/* HIDE STREAMLIT BRANDING & SIDEBAR  */
 #MainMenu, footer, [data-testid="stToolbar"] {
     display: none !important;
 }
@@ -336,7 +335,7 @@ button[data-testid="stSidebarNavToggle"],
     max-width: 100% !important;
 }
 
-/* ── TOP NAV BAR BUTTONS → STYLED AS TABS ─────────────────────────── */
+/* TOP NAV BAR BUTTONS → STYLED AS TABS  */
 /* Target the first row of columns (the nav bar) */
 [data-testid="stHorizontalBlock"]:first-child [data-testid="stButton"] button {
     background: transparent !important;
@@ -388,7 +387,7 @@ button[data-testid="stSidebarNavToggle"],
     display: none !important;
 }
 
-/* ── CUSTOM HTML TOP NAVBAR ───────────────────────────────────────── */
+/*  CUSTOM HTML TOP NAVBAR  */
 .custom-navbar {
     display: flex;
     justify-content: space-between;

@@ -181,13 +181,13 @@ new_content = re.sub(r'def show\(', threejs_func + '\ndef show(', content)
 
 # Now, inside show(), replace the plotly chart with the threejs call
 # Replace the block:
-#     # ── Time / Orbit Scrubber ────────────────────────────────────────
+#     #  Time / Orbit Scrubber 
 #     ...
 #     st.plotly_chart(fig, use_container_width=True)
 plot_block_regex = re.compile(r'# ── Time / Orbit Scrubber.*?st\.plotly_chart\(fig, use_container_width=True\)', re.DOTALL)
 
-three_js_call = """# ── 3D Visualizer ────────────────────────────────────────────────
-    st.markdown("##### 🚀 Real-time WebGL Simulation (Interact & Orbit)")
+three_js_call = """#  3D Visualizer 
+    st.markdown("##### Real-time WebGL Simulation (Interact & Orbit)")
     _render_threejs_system(system_planets, selected_host, st_teff, st_radius, target_planet)"""
 
 new_content = plot_block_regex.sub(three_js_call, new_content)
